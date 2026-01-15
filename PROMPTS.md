@@ -148,3 +148,9 @@ really, it cannot be an adverb?
 ## 2026-01-15T14:45:53Z
 
 I checked with Gemini and agree with you.  Keep Adverb out.
+
+---
+
+## 2026-01-15T14:48:12Z
+
+update the AGENTS.md MEMORY.md PLAN.md README.md with our latest state of affairs

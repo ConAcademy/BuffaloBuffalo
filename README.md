@@ -5,8 +5,8 @@ A web application for constructing, visualizing, and interpreting [Buffalo sente
 ## What is a Buffalo Sentence?
 
 "Buffalo buffalo Buffalo buffalo buffalo buffalo Buffalo buffalo" is a grammatically correct sentence. It works because "buffalo" can be:
-- A **noun** (the animal)
-- A **proper noun** (the city in New York)
+- A **proper noun** (the city in New York) — acts as an adjective
+- A **noun** (the animal, bison)
 - A **verb** (to intimidate or bully)
 
 The famous sentence means: "Bison from Buffalo, NY, that bison from Buffalo, NY intimidate, themselves intimidate bison from Buffalo, NY."
@@ -25,16 +25,24 @@ Then open http://localhost:5173 in your browser.
 
 ## Usage
 
-1. Click the colored buttons to build a sentence:
-   - **Purple** = Buffalo (the city)
-   - **Green** = buffalo (the animal)
-   - **Red** = buffalo (the verb)
+### Building Sentences
+- **Click** the colored buttons to add words to the end
+- **Drag** buttons directly into the sentence bar at any position
+- **Drag** words to reorder them within the sentence
+- **Hover** over a word and click the **X** to remove it
+- **Drag** a word off the sentence bar to remove it (with a poof!)
 
-2. Click **Parse!** to see the parse tree
+### Parts of Speech
+- **Purple (Adjective)** = Buffalo (the city)
+- **Green (Noun)** = buffalo (the animal)
+- **Red (Verb)** = buffalo (to intimidate)
+- **Golden Buffalo** = Wildcard that tries all three (limit: one per sentence)
 
-3. Use **← Previous / Next →** to browse multiple valid parses
-
-4. Toggle between **Tree** and **Reed-Kellogg** diagram styles
+### Viewing Parses
+- Parse trees update **automatically** as you build
+- Use **← Previous / Next →** to browse multiple valid parses
+- Toggle between **Tree** and **Reed-Kellogg** diagram styles
+- Invalid combinations show a helpful error message
 
 ## Scripts
 
@@ -49,16 +57,20 @@ npm run typecheck  # Check TypeScript types
 
 ## Features
 
-- **Sentence Builder**: Construct Buffalo sentences by clicking POS buttons
+- **Sentence Builder**: Click or drag to construct Buffalo sentences
+- **Golden Buffalo Wildcard**: Mystery word that tries all parts of speech
+- **Auto-Parsing**: Instant parse tree updates on every change
 - **Earley Parser**: Handles ambiguous grammars, returns all valid parses
+- **Tree Deduplication**: Filters out identical parse structures
 - **Visualization**: SVG-based tree diagrams with two layout styles
+- **Drag-and-Drop**: Intuitive reordering and removal with animations
 - **Zero Dependencies**: Pure TypeScript, no runtime frameworks
 
 ## Tech Stack
 
 - TypeScript (strict mode)
 - Vite (build tooling)
-- Vitest (testing)
+- Vitest (52 tests passing)
 - Vanilla JS (no UI framework)
 
 ## Project Structure
@@ -84,6 +96,18 @@ BuffaloBuffalo/
 ├── MEMORY.md            # Technical decisions
 └── PLAN.md              # Implementation plan
 ```
+
+## Linguistic Notes
+
+The app only allows the three linguistically valid parts of speech for "buffalo":
+
+| Button | POS | Meaning |
+|--------|-----|---------|
+| Adjective (purple) | Proper Noun (PN) | Buffalo, NY — modifies the following noun |
+| Noun (green) | Noun (N) | The animal (bison) |
+| Verb (red) | Verb (V) | To intimidate, bully, or bewilder |
+
+**Note:** "Buffalo" is never an adverb or conjunction in English — those were considered but rejected for linguistic accuracy.
 
 ## Inspiration
 

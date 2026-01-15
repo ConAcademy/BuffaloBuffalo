@@ -16,36 +16,44 @@
 
 ## Core Components
 
-### 1. Parse Tree Generator
-- Generic English sentence parser
-- Dictionary-driven (lexicon + grammar rules)
-- Must handle ambiguous parses (Buffalo sentences have multiple valid trees)
-- Unit tests should use non-Buffalo words to verify parser correctness
-- Create a Buffalo-specific dictionary with all three parts of speech
+### 1. Parse Tree Generator (Complete)
+- Earley parser for ambiguous CFG grammars
+- Dictionary-driven (Lexicon + Grammar classes)
+- Handles multiple valid parses (capped at 100)
+- Deduplicates identical parse trees
+- Unit tests use non-Buffalo words to verify parser correctness
+- Buffalo-specific lexicon with three valid parts of speech
 
-### 2. Visualization Engine
-- Render parse trees as sentence diagrams
-- Preferred style: Reed-Kellogg (elementary school diagrams)
-- Must embed cleanly in web application
-- Interactive highlighting of sentence components
+### 2. Visualization Engine (Complete)
+- SVG-based parse tree rendering
+- Two layout styles: Tree view and Reed-Kellogg
+- Color-coded nodes by part of speech
+- Position badges showing word order (1-indexed)
+- Golden Buffalo wildcard indicator (star badge)
+- Curved connector lines between nodes
 
-### 3. Web Application
-- Sentence builder UI with part-of-speech selection
-- "IDK" wildcard blocks that resolve to most likely parse
-- Display all valid parse trees for ambiguous sentences
-- Optional LLM interpretation submission
+### 3. Web Application (Complete)
+- Sentence builder with POS buttons (Adjective, Noun, Verb)
+- Golden Buffalo wildcard (limited to one per sentence)
+- Auto-parsing on any change (no parse button needed)
+- Drag-and-drop word reordering
+- Drag buttons directly into sentence bar
+- Drag words off to remove (with poof animation)
+- Hover X button to remove words
+- Preset buttons for common sentence lengths
+- Previous/Next navigation for multiple parses
 
-### 4. LLM Integration
-- Accept parsed sentence with POS metadata
-- Return human-readable interpretation
-- API choice TBD (see MEMORY.md)
+### 4. LLM Integration (Not Implemented)
+- Future feature: submit parsed sentence for interpretation
+- API choice TBD
 
 ## Technical Constraints
 
 - **Language**: TypeScript (strict mode)
-- **Framework**: Lightweight only—minimize dependencies
-- **Testing**: Unit tests for parser with non-Buffalo dictionary
-- **Style**: Keep it simple, avoid over-engineering
+- **Framework**: Vanilla TypeScript + HTML (zero runtime dependencies)
+- **Build**: Vite for development and bundling
+- **Testing**: Vitest (52 tests passing)
+- **Style**: Minimal, focused codebase
 
 ## Agent Guidelines
 
@@ -58,9 +66,18 @@
 
 ## Key Linguistic Rules
 
-Buffalo has exactly three forms:
-- `Buffalo` (proper noun) → the city
-- `buffalo` (noun) → the animal
-- `buffalo` (verb) → to intimidate
+Buffalo has exactly three valid forms:
+- `Buffalo` (proper noun/PN) → the city in New York (acts as adjective modifier)
+- `buffalo` (noun/N) → the animal (bison)
+- `buffalo` (verb/V) → to intimidate, bully, or bewilder
 
-Valid sentence pattern: Any combination where grammar rules allow noun phrases, relative clauses, and transitive verbs to connect meaningfully.
+**Invalid forms removed:**
+- Adverb - "buffalo" has no standard adverbial usage
+- Conjunction - "buffalo" is never a conjunction
+
+Valid sentence patterns follow standard English CFG rules with support for:
+- Basic sentences (S → NP VP)
+- Imperative sentences (S → VP)
+- Exclamatory sentences (S → NP)
+- Reduced relative clauses (critical for Buffalo sentences)
+- Compound sentences (S → S CONJ S) - requires actual conjunction words
