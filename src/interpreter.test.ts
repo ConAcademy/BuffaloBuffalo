@@ -35,7 +35,7 @@ describe('interpretTree', () => {
     const result = parser.parse(['Buffalo', 'buffalo', 'buffalo', 'buffalo']);
     expect(result.trees.length).toBeGreaterThan(0);
 
-    const interpretation = interpretTree(result.trees[0]);
+    const interpretation = interpretTree(result.trees[0]!);
     expect(interpretation).toBeTruthy();
     expect(interpretation.endsWith('.')).toBe(true);
   });
@@ -75,7 +75,7 @@ describe('interpretTree', () => {
     const result = parser.parse(['Buffalo', 'buffalo', 'buffalo']);
     expect(result.trees.length).toBeGreaterThan(0);
 
-    const interpretation = interpretTree(result.trees[0]);
+    const interpretation = interpretTree(result.trees[0]!);
     expect(interpretation[0]).toMatch(/[A-Z]/);
     expect(interpretation.endsWith('.')).toBe(true);
   });

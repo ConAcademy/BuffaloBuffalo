@@ -47,7 +47,7 @@ function interpretNode(node: ParseNode, ctx: InterpretContext): string {
 
   // Terminal nodes
   if (children.length === 0 && word) {
-    return interpretTerminal(symbol, word, ctx);
+    return interpretTerminal(symbol, word);
   }
 
   // Non-terminal nodes
@@ -71,7 +71,7 @@ function interpretNode(node: ParseNode, ctx: InterpretContext): string {
 /**
  * Interpret a terminal node (actual word).
  */
-function interpretTerminal(symbol: string, word: string, ctx: InterpretContext): string {
+function interpretTerminal(symbol: string, word: string): string {
   switch (symbol) {
     case 'PN':
       // Proper noun Buffalo = the city (handled specially in NP)
@@ -93,7 +93,7 @@ function interpretTerminal(symbol: string, word: string, ctx: InterpretContext):
 function interpretSentence(children: ParseNode[], ctx: InterpretContext): string {
   if (children.length === 1) {
     // S → NP (exclamatory) or S → VP (imperative)
-    const child = children[0];
+    const child = children[0]!;
     if (child.symbol === 'VP') {
       // Imperative: "Intimidate!"
       return interpretNode(child, { ...ctx, isSubject: false });
@@ -104,16 +104,17 @@ function interpretSentence(children: ParseNode[], ctx: InterpretContext): string
 
   if (children.length === 2) {
     // S → NP VP
-    const [np, vp] = children;
+    const np = children[0]!;
+    const vp = children[1]!;
     const subject = interpretNode(np, { ...ctx, isSubject: true, isMainNoun: true });
     const predicate = interpretNode(vp, { ...ctx, isSubject: false, isMainNoun: false });
     return `${subject} ${predicate}`;
   }
 
-  if (children.length === 3 && children[1].symbol === 'CONJ') {
+  if (children.length === 3 && children[1]!.symbol === 'CONJ') {
     // S → S CONJ S
-    const left = interpretNode(children[0], ctx);
-    const right = interpretNode(children[2], ctx);
+    const left = interpretNode(children[0]!, ctx);
+    const right = interpretNode(children[2]!, ctx);
     return `${left}, and ${right}`;
   }
 
@@ -126,11 +127,10 @@ function interpretSentence(children: ParseNode[], ctx: InterpretContext): string
 function interpretNounPhrase(children: ParseNode[], ctx: InterpretContext): string {
   // Single child cases
   if (children.length === 1) {
-    const child = children[0];
+    const child = children[0]!;
     if (child.symbol === 'N') {
       // NP → N (bare noun)
-      const noun = ctx.isMainNoun ? 'bison' : 'bison';
-      return ctx.depth === 0 && ctx.isSubject ? noun : noun;
+      return 'bison';
     }
     if (child.symbol === 'PN') {
       // NP → PN (proper noun as noun phrase - rare, means the city itself)
@@ -141,7 +141,8 @@ function interpretNounPhrase(children: ParseNode[], ctx: InterpretContext): stri
 
   // Two children
   if (children.length === 2) {
-    const [first, second] = children;
+    const first = children[0]!;
+    const second = children[1]!;
 
     // NP → PN N ("Buffalo buffalo" = bison from Buffalo)
     if (first.symbol === 'PN' && second.symbol === 'N') {
@@ -182,9 +183,9 @@ function interpretNounPhrase(children: ParseNode[], ctx: InterpretContext): stri
 
   // Three children: NP → NP CONJ NP or DET ADJ N
   if (children.length === 3) {
-    if (children[1].symbol === 'CONJ') {
-      const left = interpretNode(children[0], ctx);
-      const right = interpretNode(children[2], ctx);
+    if (children[1]!.symbol === 'CONJ') {
+      const left = interpretNode(children[0]!, ctx);
+      const right = interpretNode(children[2]!, ctx);
       return `${left} and ${right}`;
     }
   }
@@ -203,7 +204,8 @@ function interpretVerbPhrase(children: ParseNode[], ctx: InterpretContext): stri
   }
 
   if (children.length === 2) {
-    const [first, second] = children;
+    const first = children[0]!;
+    const second = children[1]!;
 
     // VP → V NP (transitive)
     if (first.symbol === 'V' && second.symbol === 'NP') {
@@ -218,10 +220,10 @@ function interpretVerbPhrase(children: ParseNode[], ctx: InterpretContext): stri
     }
   }
 
-  if (children.length === 3 && children[1].symbol === 'CONJ') {
+  if (children.length === 3 && children[1]!.symbol === 'CONJ') {
     // VP → VP CONJ VP
-    const left = interpretNode(children[0], ctx);
-    const right = interpretNode(children[2], ctx);
+    const left = interpretNode(children[0]!, ctx);
+    const right = interpretNode(children[2]!, ctx);
     return `${left} and ${right}`;
   }
 
@@ -239,7 +241,8 @@ function interpretRelativeClause(children: ParseNode[], ctx: InterpretContext): 
   // "buffalo [that] Buffalo buffalo buffalo"
   // = bison [that] bison from Buffalo intimidate
   if (children.length === 2) {
-    const [first, second] = children;
+    const first = children[0]!;
+    const second = children[1]!;
 
     if (first.symbol === 'NP' && second.symbol === 'VP') {
       // Reduced relative: the subject of the RC does the action to the main NP
@@ -262,8 +265,8 @@ function interpretRelativeClause(children: ParseNode[], ctx: InterpretContext): 
   }
 
   // RC → S (reduced relative with extracted subject)
-  if (children.length === 1 && children[0].symbol === 'S') {
-    const s = interpretNode(children[0], { ...ctx, depth: ctx.depth + 1 });
+  if (children.length === 1 && children[0]!.symbol === 'S') {
+    const s = interpretNode(children[0]!, { ...ctx, depth: ctx.depth + 1 });
     return `that ${s}`;
   }
 
@@ -276,7 +279,8 @@ function interpretRelativeClause(children: ParseNode[], ctx: InterpretContext): 
  */
 function interpretPrepPhrase(children: ParseNode[], ctx: InterpretContext): string {
   if (children.length === 2) {
-    const [prep, np] = children;
+    const prep = children[0]!;
+    const np = children[1]!;
     const prepWord = interpretNode(prep, ctx);
     const npPart = interpretNode(np, ctx);
     return `${prepWord} ${npPart}`;

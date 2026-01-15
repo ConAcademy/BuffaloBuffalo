@@ -48,9 +48,10 @@ tasks:
       - rm -rf dist node_modules/.vite
 
   ci:
-    desc: Run full CI pipeline (install, test, build)
+    desc: Run full CI pipeline (install, typecheck, test, build)
     cmds:
       - npm ci
+      - npm run typecheck
       - npm run test:run
       - npm run build
 

@@ -232,3 +232,9 @@ it is showing  three nouns as valid.  is that true?  the meaning shows to be "bi
 ## 2026-01-15T15:57:16Z
 
 it seems that it is drawing the graph of all buffalos rather than using the constraints in the sentence bar
+
+---
+
+## 2026-01-15T16:03:14Z
+
+when building after push, i see "Argument of type 'ParseNode | undefined' is not assignable to parameter of type 'ParseNode'." at line 115 of interpreter.tsx   how come we didn't find that pre-push?  identify why, then try to fix the problem by witnessing it
