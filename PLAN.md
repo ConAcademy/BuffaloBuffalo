@@ -118,6 +118,17 @@
 - [x] Clean styling with CSS custom properties
 - [x] Legend showing color meanings
 
+### 4.6 Two Modes ✓
+- [x] Grammar Mode: constrained POS selection with presets
+- [x] Wild Mode: all buffalos are wildcards (brown colored)
+- [x] Mode toggle buttons in UI
+- [x] Grammar Mode defaults to A-N-V pattern
+- [x] Wild Mode defaults to single buffalo
+- [x] Mode switching clears sentence
+- [x] Presets hidden in Wild Mode
+- [x] Performance warning for 5+ wild buffalos
+- [x] Loading spinner during parsing
+
 ## Phase 5: Interpretation ✓
 
 ### 5.1 Rule-Based Interpreter ✓
@@ -128,6 +139,8 @@
 - [x] V → "intimidate"
 - [x] Handle relative clauses with "that"
 - [x] Display interpretation below parse tree in UI
+- [x] Color-coded HTML output matching visualization
+- [x] Superscript position numbers linking to tree nodes
 
 ### 5.2 LLM Integration (Future/Optional)
 - [ ] Define request format: sentence + parse tree + POS tags
@@ -136,29 +149,39 @@
 - [ ] Add loading state during inference
 - [ ] Cache responses to avoid duplicate calls
 
-## Phase 6: Polish (Future)
+## Phase 6: Polish ✓
 
-### 6.1 Error Handling
+### 6.1 Error Handling ✓
 - [x] Input validation throughout
 - [x] User-friendly error messages
 - [x] Fallback states for all components
 
-### 6.2 Performance
+### 6.2 Performance ✓
 - [x] Auto-parse is fast enough (no debounce needed)
 - [x] Efficient tree deduplication
-- [ ] Lazy load visualization (not needed - fast enough)
+- [x] Performance warning for expensive operations (5+ wild buffalos)
+- [x] Loading spinner for visual feedback
 
-### 6.3 Documentation
+### 6.3 Responsive Design ✓
+- [x] Mobile-friendly header and images
+- [x] Sentence bar wrapping on small screens
+- [x] Touch-friendly interactions
+
+### 6.4 DevOps ✓
+- [x] GitHub Actions deployment to GitHub Pages
+- [x] Taskfile.yml for common commands
+- [x] Buffalo favicon
+
+### 6.5 Documentation ✓
 - [x] README with usage instructions
 - [x] AGENTS.md with component overview
 - [x] MEMORY.md with technical decisions
 - [x] PLAN.md tracking implementation
-- [ ] Inline code comments where non-obvious
 
 ---
 
 ## Current Status
 
-**Phase**: Phase 5 Complete (Interpretation)
+**Phase**: All phases complete
 **Tests**: 58 passing
-**Next Step**: Phase 6 - Polish (optional)
+**Live Demo**: https://conacademy.github.io/BuffaloBuffalo/

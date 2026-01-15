@@ -376,3 +376,9 @@ the grouping underlines get confusing, we don't need them.  i do like the color 
 ## 2026-01-15T22:34:14Z
 
 let's have the Grammar Mode default to A-N-V when you first navigate to it
+
+---
+
+## 2026-01-15T22:37:51Z
+
+we've done a lot of work.  please update all the markdown files

@@ -54,14 +54,21 @@ This file stores persistent concepts, decisions, and insights for the BuffaloBuf
 - Curved Bezier connector lines between parent/child nodes
 
 ### Web Application Features (Implemented)
+- **Two Modes**:
+  - **Grammar Mode**: Constrained POS selection, defaults to A-N-V pattern, presets available
+  - **Wild Mode**: All buffalos are wildcards (brown), explores all possible parses
+- Mode switching clears sentence: Wild starts with 1 buffalo, Grammar starts with A-N-V
 - **Auto-parsing**: Tree updates instantly on any change (no Parse button)
-- **Golden Buffalo wildcard**: Expands to try all 3 valid POS, limited to one per sentence
+- **Loading spinner**: Visual feedback during complex parses
+- **Performance warning**: Alert when Wild Mode exceeds 5 buffalos (exponential complexity)
+- **Golden Buffalo wildcard** (Grammar Mode only): Expands to try all 3 valid POS, limited to one per sentence
 - **Drag-and-drop**:
   - Reorder words by dragging within sentence bar
   - Drag POS buttons directly into sentence bar at specific position
   - Drag words off sentence bar to remove (with poof animation)
 - **Hover X button**: Click to remove words
 - **Invalid parse state**: Red dashed box with helpful message
+- **Mobile responsive**: Smaller header/images on mobile, proper touch handling
 
 ### Type Structure (Implemented)
 ```typescript
@@ -75,6 +82,17 @@ interface LexiconEntry {
   features?: GrammaticalFeatures;
 }
 ```
+
+### Interpretation Engine (Implemented)
+- Rule-based tree-to-English converter (`src/interpreter.ts`)
+- Recursive traversal of parse tree
+- Translation rules:
+  - PN (Buffalo) → "from Buffalo" when modifying, standalone otherwise
+  - N (buffalo) → "bison"
+  - V (buffalo) → "intimidate"
+- Relative clause insertion with "that"
+- Color-coded HTML output matching visualization colors
+- Superscript position numbers linking to tree nodes
 
 ## Resolved Decisions
 
@@ -90,6 +108,15 @@ interface LexiconEntry {
 - **Decision:** Only include linguistically valid POS for "buffalo"
 - **Rationale:** Verified with external sources that "buffalo" is only ever noun, proper noun, or verb
 - **Removed:** Adverb and Conjunction buttons (were added then removed)
+
+### Two Mode Design
+- **Decision:** Grammar Mode (constrained) + Wild Mode (exploration)
+- **Rationale:**
+  - Grammar Mode allows precise control over sentence construction
+  - Wild Mode satisfies curiosity about all possible parses
+  - Mode switching clears sentence to prevent accidental long computations
+  - Grammar Mode defaults to A-N-V (simplest valid sentence) for quick start
+  - Wild Mode defaults to single buffalo for safety
 
 ## Open Questions
 - [ ] LLM API choice for interpretation feature

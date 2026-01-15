@@ -37,6 +37,20 @@ Then open http://localhost:5173 in your browser.
 
 ## Usage
 
+### Two Modes
+
+**Grammar Mode** (default)
+- Specify exact parts of speech for each word
+- Starts with the A-N-V pattern (Adjective-Noun-Verb)
+- Use presets for common sentence lengths (3, 4, 5, 8 words)
+- Add a **Golden Buffalo** wildcard (tries all POS, limit one per sentence)
+
+**Wild Mode**
+- Explore all possible parses without constraints
+- Every buffalo is a wildcard (brown colored)
+- Warning when exceeding 5 words (exponential parse complexity)
+- Great for discovering valid sentence structures
+
 ### Building Sentences
 - **Click** the colored buttons to add words to the end
 - **Drag** buttons directly into the sentence bar at any position
@@ -44,7 +58,7 @@ Then open http://localhost:5173 in your browser.
 - **Hover** over a word and click the **X** to remove it
 - **Drag** a word off the sentence bar to remove it (with a poof!)
 
-### Parts of Speech
+### Parts of Speech (Grammar Mode)
 - **Purple (Adjective)** = Buffalo (the city)
 - **Green (Noun)** = buffalo (the animal)
 - **Red (Verb)** = buffalo (to intimidate)
@@ -54,7 +68,8 @@ Then open http://localhost:5173 in your browser.
 - Parse trees update **automatically** as you build
 - Use **← Previous / Next →** to browse multiple valid parses
 - Toggle between **Tree** and **Reed-Kellogg** diagram styles
-- **Plain English interpretation** shown below each parse tree
+- **Color-coded interpretation** shown with position numbers
+- Loading spinner for complex parses
 - Invalid combinations show a helpful error message
 
 ## Scripts
@@ -70,21 +85,23 @@ npm run typecheck  # Check TypeScript types
 
 ## Features
 
+- **Two Modes**: Grammar Mode (constrained POS) and Wild Mode (explore all parses)
 - **Sentence Builder**: Click or drag to construct Buffalo sentences
 - **Golden Buffalo Wildcard**: Mystery word that tries all parts of speech
 - **Auto-Parsing**: Instant parse tree updates on every change
-- **Plain English Interpreter**: Converts parse trees to readable sentences
+- **Color-Coded Interpreter**: Converts parse trees to readable sentences with position markers
 - **Earley Parser**: Handles ambiguous grammars, returns all valid parses
 - **Tree Deduplication**: Filters out identical parse structures
 - **Visualization**: SVG-based tree diagrams with two layout styles
 - **Drag-and-Drop**: Intuitive reordering and removal with animations
+- **Mobile Responsive**: Works on phones and tablets
 - **Zero Dependencies**: Pure TypeScript, no runtime frameworks
 
 ## Tech Stack
 
 - TypeScript (strict mode)
 - Vite (build tooling)
-- Vitest (52 tests passing)
+- Vitest (58 tests passing)
 - Vanilla JS (no UI framework)
 
 ## Project Structure

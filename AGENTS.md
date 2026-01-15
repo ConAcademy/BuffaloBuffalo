@@ -33,18 +33,28 @@
 - Curved connector lines between nodes
 
 ### 3. Web Application (Complete)
-- Sentence builder with POS buttons (Adjective, Noun, Verb)
-- Golden Buffalo wildcard (limited to one per sentence)
+- **Two modes**: Grammar Mode (constrained) and Wild Mode (explore all)
+- Grammar Mode: POS buttons (Adjective, Noun, Verb), defaults to A-N-V pattern
+- Wild Mode: Brown buffalo buttons, all wildcards, warns at 5+ words
+- Golden Buffalo wildcard in Grammar Mode (limited to one per sentence)
 - Auto-parsing on any change (no parse button needed)
+- Loading spinner for complex parses
 - Drag-and-drop word reordering
 - Drag buttons directly into sentence bar
 - Drag words off to remove (with poof animation)
 - Hover X button to remove words
-- Preset buttons for common sentence lengths
+- Preset buttons for common sentence lengths (Grammar Mode only)
 - Previous/Next navigation for multiple parses
+- Mobile responsive design
 
-### 4. LLM Integration (Not Implemented)
-- Future feature: submit parsed sentence for interpretation
+### 4. Interpretation Engine (Complete)
+- Rule-based interpreter converts parse trees to plain English
+- Color-coded output matches visualization colors
+- Superscript position numbers link words to tree nodes
+- Handles relative clauses, compound sentences, etc.
+
+### 5. LLM Integration (Not Implemented)
+- Future feature: enhanced interpretation via LLM
 - API choice TBD
 
 ## Technical Constraints
@@ -52,7 +62,7 @@
 - **Language**: TypeScript (strict mode)
 - **Framework**: Vanilla TypeScript + HTML (zero runtime dependencies)
 - **Build**: Vite for development and bundling
-- **Testing**: Vitest (52 tests passing)
+- **Testing**: Vitest (58 tests passing)
 - **Style**: Minimal, focused codebase
 
 ## Agent Guidelines
