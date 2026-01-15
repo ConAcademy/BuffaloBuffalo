@@ -370,3 +370,9 @@ the grouping underlines get confusing, we don't need them.  i do like the color 
 ## 2026-01-15T20:55:57Z
 
 the grouping underlines get confusing, we don't need them.  i do like the color coding in there, maybe we can add a superscript number to correspond to their id?
+
+---
+
+## 2026-01-15T22:34:14Z
+
+let's have the Grammar Mode default to A-N-V when you first navigate to it

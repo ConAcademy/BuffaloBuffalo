@@ -833,9 +833,12 @@
         // Wild mode starts with a single buffalo
         words = [{ word: 'buffalo', pos: 'WILD' }];
       } else {
-        // Grammar mode starts empty
-        words = [];
-        showEmptyState(true);
+        // Grammar mode starts with A-N-V pattern
+        words = [
+          { word: 'buffalo', pos: 'PN' },
+          { word: 'buffalo', pos: 'N' },
+          { word: 'buffalo', pos: 'V' },
+        ];
       }
 
       // Re-render sentence to update styling
@@ -1390,10 +1393,15 @@
       `;
     };
 
-    // Initialize
+    // Initialize with A-N-V pattern
+    words = [
+      { word: 'buffalo', pos: 'PN' },
+      { word: 'buffalo', pos: 'N' },
+      { word: 'buffalo', pos: 'V' },
+    ];
     renderSentence();
     updateWildcardButton();
-    showEmptyState(true);
+    parseSentence();
   </script>
 
   <div class="footer">
