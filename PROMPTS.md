@@ -118,3 +118,33 @@ can you add a poof emoji to flash when it's dragged off?
 ## 2026-01-15T14:24:27Z
 
 the boof should be near the point of release
+
+---
+
+## 2026-01-15T14:25:56Z
+
+when i drag a golden buffalo solitary, i don't get a valid parse.  isn't "Buffalo!" valid?
+
+---
+
+## 2026-01-15T14:26:37Z
+
+scan your grammar for any other missing rules, including interrogative
+
+---
+
+## 2026-01-15T14:30:21Z
+
+is buffalo ever a conjunction?  is that valid to just assign it to be one?
+
+---
+
+## 2026-01-15T14:38:05Z
+
+really, it cannot be an adverb?
+
+---
+
+## 2026-01-15T14:45:53Z
+
+I checked with Gemini and agree with you.  Keep Adverb out.

@@ -19,7 +19,6 @@ const POS_COLORS: Record<string, string> = {
   PN: '#9b59b6',  // Purple - Adjective (proper noun/city)
   N: '#2ecc71',   // Green - Noun (animal)
   V: '#e74c3c',   // Red - Verb (intimidate)
-  ADV: '#3498db', // Blue - Adverb
 };
 
 const DEFAULT_COLORS = {

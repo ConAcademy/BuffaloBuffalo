@@ -57,6 +57,12 @@ export function createEnglishGrammar(): Grammar {
 
   // Sentence rules
   g.addRule('S', ['NP', 'VP'], 1.0);
+  // Imperative sentences (commands): "Buffalo!" = "Intimidate!"
+  g.addRule('S', ['VP'], 0.8);
+  // Exclamatory/nominal sentences: "Buffalo!" (as exclamation about noun)
+  g.addRule('S', ['NP'], 0.5);
+  // Compound sentences: "Buffalo buffalo and buffalo buffalo"
+  g.addRule('S', ['S', 'CONJ', 'S'], 0.7);
 
   // Noun phrase rules
   // NP → N (bare noun, especially for plurals/proper nouns)
@@ -77,6 +83,8 @@ export function createEnglishGrammar(): Grammar {
   g.addRule('NP', ['PN'], 0.8); // Proper noun becomes noun phrase
   // NP → PN N (proper noun modifying noun, e.g., "Buffalo buffalo")
   g.addRule('NP', ['PN', 'N'], 0.85);
+  // Compound noun phrases: "buffalo and buffalo"
+  g.addRule('NP', ['NP', 'CONJ', 'NP'], 0.6);
 
   // Verb phrase rules
   // VP → V (intransitive)
@@ -91,6 +99,16 @@ export function createEnglishGrammar(): Grammar {
   g.addRule('VP', ['V', 'ADV'], 0.6);
   // VP → ADV V (adverb before verb)
   g.addRule('VP', ['ADV', 'V'], 0.5);
+  // VP → V NP ADV (transitive with trailing adverb)
+  g.addRule('VP', ['V', 'NP', 'ADV'], 0.5);
+  // VP → ADV V NP (adverb before transitive verb)
+  g.addRule('VP', ['ADV', 'V', 'NP'], 0.5);
+  // Compound verb phrases: "buffalo and buffalo"
+  g.addRule('VP', ['VP', 'CONJ', 'VP'], 0.6);
+
+  // Adverb phrase rules
+  g.addRule('ADVP', ['ADV'], 0.8);
+  g.addRule('ADVP', ['ADV', 'ADV'], 0.4);
 
   // Prepositional phrase rules
   // PP → PREP NP
