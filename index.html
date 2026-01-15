@@ -86,16 +86,68 @@
       border-radius: 4px;
       min-height: 60px;
       margin-bottom: 15px;
+      transition: background-color 0.2s, box-shadow 0.2s;
+    }
+
+    .sentence-display.drop-active {
+      background: #d5dbdb;
+      box-shadow: inset 0 0 0 3px #3498db;
+    }
+
+    .drop-indicator {
+      display: inline-block;
+      width: 4px;
+      height: 32px;
+      background: #3498db;
+      border-radius: 2px;
+      vertical-align: middle;
+      margin: 0 2px;
+      animation: pulse 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
+    }
+
+    .buffalo-btn[draggable="true"] {
+      cursor: grab;
+    }
+
+    .buffalo-btn[draggable="true"]:active {
+      cursor: grabbing;
     }
 
     .word {
       display: inline-block;
       margin: 0 5px;
-      padding: 5px 10px;
+      padding: 5px 10px 5px 28px;
       border-radius: 4px;
       cursor: grab;
       user-select: none;
       transition: transform 0.1s, opacity 0.1s;
+      position: relative;
+    }
+
+    .word-pn .word-position { color: #9b59b6; }
+    .word-n .word-position { color: #2ecc71; }
+    .word-v .word-position { color: #e74c3c; }
+    .word-wild .word-position { color: #b8860b; }
+
+    .word-position {
+      position: absolute;
+      left: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .word:active {
@@ -259,10 +311,10 @@
 
   <div class="input-section">
     <div class="buffalo-buttons">
-      <button class="buffalo-btn btn-pn" onclick="addWord('PN')">Adjective</button>
-      <button class="buffalo-btn btn-n" onclick="addWord('N')">Noun</button>
-      <button class="buffalo-btn btn-v" onclick="addWord('V')">Verb</button>
-      <button class="buffalo-btn btn-wild" id="wild-btn" onclick="addWord('WILD')">Golden Buffalo ✨</button>
+      <button class="buffalo-btn btn-pn" draggable="true" data-pos="PN" onclick="addWord('PN')">Adjective</button>
+      <button class="buffalo-btn btn-n" draggable="true" data-pos="N" onclick="addWord('N')">Noun</button>
+      <button class="buffalo-btn btn-v" draggable="true" data-pos="V" onclick="addWord('V')">Verb</button>
+      <button class="buffalo-btn btn-wild" draggable="true" data-pos="WILD" id="wild-btn" onclick="addWord('WILD')">Golden Buffalo ✨</button>
       <button class="buffalo-btn btn-clear" onclick="clearSentence()">Clear</button>
       <button class="buffalo-btn btn-parse" onclick="parseSentence()">Parse!</button>
     </div>
@@ -389,11 +441,123 @@
     };
 
     let draggedIndex = null;
+    let draggedButtonPos = null;
+
+    // Handle button drag events
+    document.querySelectorAll('.buffalo-btn[data-pos]').forEach(btn => {
+      btn.addEventListener('dragstart', handleButtonDragStart);
+      btn.addEventListener('dragend', handleButtonDragEnd);
+    });
+
+    function handleButtonDragStart(e) {
+      const pos = e.target.dataset.pos;
+      if (pos === 'WILD' && hasWildcard()) {
+        e.preventDefault();
+        return;
+      }
+      draggedButtonPos = pos;
+      e.dataTransfer.effectAllowed = 'copy';
+      e.dataTransfer.setData('application/x-pos', pos);
+      e.target.style.opacity = '0.5';
+    }
+
+    function handleButtonDragEnd(e) {
+      e.target.style.opacity = '1';
+      draggedButtonPos = null;
+      removeDragIndicators();
+    }
+
+    // Handle drops on sentence container
+    const sentenceContainer = document.getElementById('sentence');
+
+    sentenceContainer.addEventListener('dragover', handleSentenceDragOver);
+    sentenceContainer.addEventListener('dragenter', handleSentenceDragEnter);
+    sentenceContainer.addEventListener('dragleave', handleSentenceDragLeave);
+    sentenceContainer.addEventListener('drop', handleSentenceDrop);
+
+    function handleSentenceDragOver(e) {
+      e.preventDefault();
+      if (draggedButtonPos) {
+        e.dataTransfer.dropEffect = 'copy';
+        updateDropIndicator(e);
+      }
+    }
+
+    function handleSentenceDragEnter(e) {
+      e.preventDefault();
+      if (draggedButtonPos) {
+        sentenceContainer.classList.add('drop-active');
+      }
+    }
+
+    function handleSentenceDragLeave(e) {
+      // Only remove if actually leaving the container
+      if (!sentenceContainer.contains(e.relatedTarget)) {
+        sentenceContainer.classList.remove('drop-active');
+        removeDragIndicators();
+      }
+    }
+
+    function handleSentenceDrop(e) {
+      e.preventDefault();
+      sentenceContainer.classList.remove('drop-active');
+
+      const pos = e.dataTransfer.getData('application/x-pos');
+      if (pos) {
+        // Insert at calculated position
+        const insertIndex = getInsertIndex(e);
+        if (pos === 'WILD' && hasWildcard()) return;
+
+        words.splice(insertIndex, 0, { word: 'buffalo', pos });
+        renderSentence();
+        updateWildcardButton();
+      }
+
+      removeDragIndicators();
+    }
+
+    function getInsertIndex(e) {
+      const wordElements = sentenceContainer.querySelectorAll('.word');
+      if (wordElements.length === 0) return 0;
+
+      const containerRect = sentenceContainer.getBoundingClientRect();
+      const x = e.clientX;
+
+      for (let i = 0; i < wordElements.length; i++) {
+        const rect = wordElements[i].getBoundingClientRect();
+        const midpoint = rect.left + rect.width / 2;
+        if (x < midpoint) {
+          return i;
+        }
+      }
+      return wordElements.length;
+    }
+
+    function updateDropIndicator(e) {
+      removeDragIndicators();
+
+      const wordElements = sentenceContainer.querySelectorAll('.word');
+      if (wordElements.length === 0) return;
+
+      const insertIndex = getInsertIndex(e);
+      const indicator = document.createElement('span');
+      indicator.className = 'drop-indicator';
+
+      if (insertIndex >= wordElements.length) {
+        wordElements[wordElements.length - 1].after(indicator);
+      } else {
+        wordElements[insertIndex].before(indicator);
+      }
+    }
+
+    function removeDragIndicators() {
+      sentenceContainer.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+    }
 
     function renderSentence() {
       const container = document.getElementById('sentence');
       if (words.length === 0) {
-        container.innerHTML = '<span style="color: #999;">Click buttons to add words, drag to reorder...</span>';
+        container.innerHTML = '<span style="color: #999;">Click or drag buttons to add words...</span>';
         return;
       }
 
@@ -406,10 +570,11 @@
           label = w.pos === 'PN' ? 'Buffalo' : 'buffalo';
           cls = w.pos === 'PN' ? 'word-pn' : w.pos === 'N' ? 'word-n' : 'word-v';
         }
+        const position = i + 1;
         return `<span class="word ${cls}"
                       draggable="true"
                       data-index="${i}"
-                      title="Drag to reorder, double-click to remove">${label}</span>`;
+                      title="Drag to reorder, double-click to remove"><span class="word-position">${position}</span>${label}</span>`;
       }).join('');
 
       // Add drag event listeners

@@ -46,3 +46,21 @@ for the buffalo word selection, use the parts of speech rather than the descript
 ## 2026-01-15T12:58:27Z
 
 i would like to rearrange the selected word order, allow dragging and moving of them in the sentence box
+
+---
+
+## 2026-01-15T13:19:46Z
+
+i don't see appropriate color codings in the visualization.  can we also identify the words by position in sentence, with a small numeric identifier in the box, which appears in the tree and the sentence box
+
+---
+
+## 2026-01-15T13:57:31Z
+
+in the sentence input bar, i see the badge circles, but not the numbers in them except on the golden buffalo.  i do see them in the graph viz
+
+---
+
+## 2026-01-15T13:58:48Z
+
+that fixed it.  i found myself wanting to drag the parts of speech buttons rather than clicking.  i want to support both, can we drag the buttons too into the proper place in the bar?

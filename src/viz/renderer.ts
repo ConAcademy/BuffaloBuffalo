@@ -8,17 +8,20 @@ export interface RenderConfig extends Partial<LayoutConfig> {
   style?: 'tree' | 'reed-kellogg';
   colors?: {
     node?: string;
-    terminal?: string;
-    word?: string;
     line?: string;
     background?: string;
   };
 }
 
+// POS-specific colors matching the UI
+const POS_COLORS: Record<string, string> = {
+  PN: '#9b59b6',  // Purple - Adjective (proper noun/city)
+  N: '#2ecc71',   // Green - Noun (animal)
+  V: '#e74c3c',   // Red - Verb (intimidate)
+};
+
 const DEFAULT_COLORS = {
-  node: '#4a90d9',
-  terminal: '#2ecc71',
-  word: '#333',
+  node: '#4a90d9',      // Blue for phrase nodes
   line: '#666',
   background: '#fff',
 };
@@ -43,6 +46,7 @@ export function renderTreeToSVG(tree: ParseTree, config: RenderConfig = {}): str
   <style>
     .node-label { font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace; font-size: 12px; font-weight: bold; }
     .word-label { font-family: Georgia, 'Times New Roman', serif; font-size: 14px; font-style: italic; }
+    .position-badge { font-family: 'SF Mono', Monaco, monospace; font-size: 10px; font-weight: bold; }
     .node-rect { rx: 4; ry: 4; }
     .connector { stroke-width: 2; fill: none; }
   </style>
@@ -80,14 +84,19 @@ function renderLines(node: LayoutNode, color: string): string {
 function renderNodes(node: LayoutNode, colors: typeof DEFAULT_COLORS): string {
   let svg = '';
 
-  // Determine node color
-  const fillColor = node.isTerminal ? colors.terminal : colors.node;
+  // Determine node color based on POS for terminals, default blue for phrases
+  let fillColor = colors.node;
+  if (node.isTerminal && node.pos) {
+    fillColor = POS_COLORS[node.pos] ?? colors.node;
+  }
+
+  const rectHeight = node.isTerminal && node.word ? node.height / 2 : node.height;
 
   // Node rectangle
   svg += `
   <rect class="node-rect"
         x="${node.x}" y="${node.y}"
-        width="${node.width}" height="${node.isTerminal && node.word ? node.height / 2 : node.height}"
+        width="${node.width}" height="${rectHeight}"
         fill="${fillColor}" />`;
 
   // Node label (symbol/POS)
@@ -97,12 +106,23 @@ function renderNodes(node: LayoutNode, colors: typeof DEFAULT_COLORS): string {
         x="${node.x + node.width / 2}" y="${labelY}"
         text-anchor="middle" fill="white">${escapeXml(node.label)}</text>`;
 
+  // Position badge for terminals (top-right corner)
+  if (node.isTerminal && node.position !== undefined) {
+    const badgeX = node.x + node.width - 12;
+    const badgeY = node.y + 4;
+    svg += `
+    <circle cx="${badgeX}" cy="${badgeY + 6}" r="8" fill="white" stroke="${fillColor}" stroke-width="1.5" />
+    <text class="position-badge"
+          x="${badgeX}" y="${badgeY + 10}"
+          text-anchor="middle" fill="${fillColor}">${node.position}</text>`;
+  }
+
   // Word label for terminals
   if (node.isTerminal && node.word) {
     svg += `
   <text class="word-label"
         x="${node.x + node.width / 2}" y="${node.y + node.height - 6}"
-        text-anchor="middle" fill="${colors.word}">${escapeXml(node.word)}</text>`;
+        text-anchor="middle" fill="#333">${escapeXml(node.word)}</text>`;
   }
 
   // Render children

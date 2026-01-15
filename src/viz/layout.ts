@@ -14,6 +14,10 @@ export interface LayoutNode {
   children: LayoutNode[];
   // For Reed-Kellogg style connections
   baselineY?: number;
+  // Position in sentence (1-indexed) for terminals
+  position?: number;
+  // Part of speech for color coding
+  pos?: string;
 }
 
 /**
@@ -71,11 +75,16 @@ function buildLayoutNode(node: ParseNode, cfg: LayoutConfig): LayoutNode {
   const label = String(node.symbol);
   const word = node.word;
 
-  // Calculate width based on label/word length
+  // Calculate width based on label/word length (add space for position badge)
   const textLength = Math.max(label.length, (word ?? '').length);
-  const width = Math.max(cfg.nodeWidth, textLength * cfg.fontSize * 0.6 + 20);
+  const width = Math.max(cfg.nodeWidth, textLength * cfg.fontSize * 0.6 + 30);
 
   const children = node.children.map(child => buildLayoutNode(child, cfg));
+
+  // Position in sentence (1-indexed) from span
+  const position = isTerminal ? node.span[0] + 1 : undefined;
+  // Part of speech for terminal nodes
+  const pos = isTerminal ? String(node.symbol) : undefined;
 
   return {
     x: 0,
@@ -86,6 +95,8 @@ function buildLayoutNode(node: ParseNode, cfg: LayoutConfig): LayoutNode {
     word,
     isTerminal,
     children,
+    position,
+    pos,
   };
 }
 
