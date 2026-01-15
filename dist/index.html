@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BuffaloBuffalo - Sentence Parser</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cellipse cx='16' cy='18' rx='12' ry='9' fill='%235c4033'/%3E%3Cellipse cx='16' cy='14' rx='8' ry='7' fill='%234a3728'/%3E%3Ccircle cx='12' cy='13' r='1.5' fill='%23222'/%3E%3Ccircle cx='20' cy='13' r='1.5' fill='%23222'/%3E%3Cellipse cx='16' cy='17' rx='3' ry='2' fill='%233d2d20'/%3E%3Cpath d='M6 10 Q4 6 2 8 Q4 10 6 12' fill='%234a3728'/%3E%3Cpath d='M26 10 Q28 6 30 8 Q28 10 26 12' fill='%234a3728'/%3E%3Cellipse cx='8' cy='20' rx='2' ry='4' fill='%235c4033'/%3E%3Cellipse cx='24' cy='20' rx='2' ry='4' fill='%235c4033'/%3E%3C/svg%3E">
   <style>
     * {
       box-sizing: border-box;
@@ -119,7 +120,7 @@
 
     .word {
       display: inline-block;
-      margin: 0 5px;
+      margin: 4px 5px;
       padding: 5px 28px 5px 28px;
       border-radius: 4px;
       cursor: grab;
@@ -228,6 +229,26 @@
       font-weight: bold;
     }
 
+    .word-wild-mode {
+      background: linear-gradient(135deg, #5c4033 0%, #4a3728 100%);
+      color: #d4c4b0;
+    }
+
+    .word-wild-mode .word-position {
+      color: #5c4033;
+    }
+
+    .btn-bison {
+      background: linear-gradient(135deg, #5c4033 0%, #4a3728 100%);
+      color: #d4c4b0;
+    }
+
+    .buffalo-buttons.wild-mode .btn-pn,
+    .buffalo-buttons.wild-mode .btn-n,
+    .buffalo-buttons.wild-mode .btn-v {
+      display: none;
+    }
+
     .drop-indicator {
       display: inline-block;
       width: 3px;
@@ -323,6 +344,95 @@
       margin: 0 auto;
     }
 
+    .parse-content {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .parse-content .visualization {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .interpretation {
+      flex: 0 0 250px;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 8px;
+      border-left: 4px solid #3498db;
+      font-size: 16px;
+      font-style: italic;
+      color: #2c3e50;
+    }
+
+    .interpretation:empty {
+      display: none;
+    }
+
+    .interpretation-label {
+      font-size: 11px;
+      font-style: normal;
+      font-weight: bold;
+      color: #7f8c8d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .interp-pn {
+      color: #9b59b6;
+      font-weight: 600;
+    }
+
+    .interp-n {
+      color: #27ae60;
+      font-weight: 600;
+    }
+
+    .interp-v {
+      color: #e74c3c;
+      font-weight: 600;
+    }
+
+    .interp-pos {
+      font-size: 0.65em;
+      vertical-align: super;
+      opacity: 0.7;
+      margin-left: 1px;
+    }
+
+    @media (max-width: 768px) {
+      .parse-content {
+        flex-direction: column;
+      }
+
+      .interpretation {
+        flex: none;
+        width: 100%;
+      }
+
+      .header {
+        gap: 8px;
+      }
+
+      .logo {
+        width: 64px;
+      }
+
+      .hero-image {
+        width: 56px;
+      }
+
+      .header-text h1 {
+        font-size: 1.2rem;
+      }
+
+      .header-text .subtitle {
+        font-size: 0.75rem;
+      }
+    }
+
     .no-parses {
       text-align: center;
       padding: 40px;
@@ -331,6 +441,17 @@
       background: #fdf2f2;
       border-radius: 8px;
       border: 2px dashed #e74c3c;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #7f8c8d;
+      font-size: 18px;
+    }
+
+    .empty-state p {
+      margin: 0;
     }
 
     .legend {
@@ -358,19 +479,256 @@
     .legend-color.golden {
       background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
     }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 8px;
+    }
+
+    .logo {
+      width: 144px;
+      height: auto;
+    }
+
+    .hero-image {
+      width: 112px;
+      height: auto;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .header-text {
+      text-align: center;
+    }
+
+    .header-text h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .header-text .subtitle {
+      margin: 3px 0 0 0;
+      font-size: 0.95rem;
+    }
+
+    .footer {
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid #ddd;
+      text-align: left;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .footer a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .mode-toggle label {
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .mode-btn {
+      padding: 8px 16px;
+      border: 2px solid #ddd;
+      background: white;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .mode-btn:hover {
+      border-color: #3498db;
+    }
+
+    .mode-btn.active {
+      background: #3498db;
+      border-color: #3498db;
+      color: white;
+    }
+
+    .mode-btn.active.wild-active {
+      background: linear-gradient(135deg, #9b59b6, #e74c3c, #f39c12);
+      border-color: transparent;
+    }
+
+    .mode-description {
+      font-size: 12px;
+      color: #7f8c8d;
+      margin-left: auto;
+    }
+
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .loading-overlay.active {
+      display: flex;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #eee;
+      border-top-color: #5c4033;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 16px;
+      color: #5c4033;
+      font-weight: 500;
+    }
+
+    .loading-subtext {
+      font-size: 13px;
+      color: #7f8c8d;
+    }
+
+    .confirm-dialog {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .confirm-dialog.active {
+      display: flex;
+    }
+
+    .confirm-box {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .confirm-box h3 {
+      margin: 0 0 15px 0;
+      color: #5c4033;
+    }
+
+    .confirm-box p {
+      margin: 0 0 20px 0;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .confirm-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .confirm-btn {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .confirm-btn.cancel {
+      background: #95a5a6;
+      color: white;
+    }
+
+    .confirm-btn.proceed {
+      background: #5c4033;
+      color: #d4c4b0;
+    }
+
+    .confirm-btn:hover {
+      opacity: 0.9;
+    }
   </style>
-  <script type="module" crossorigin src="/BuffaloBuffalo/assets/index-DiGiMvtb.js"></script>
+  <script type="module" crossorigin src="/BuffaloBuffalo/assets/index-DH1Rvn5k.js"></script>
 </head>
 <body>
-  <h1>BuffaloBuffalo</h1>
-  <p class="subtitle">Construct and visualize Buffalo sentences</p>
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Parsing buffalo...</div>
+    <div class="loading-subtext" id="loading-subtext">Computing all possible interpretations</div>
+  </div>
+
+  <div class="confirm-dialog" id="confirm-dialog">
+    <div class="confirm-box">
+      <h3>Warning: Slow Computation</h3>
+      <p id="confirm-message">Adding more buffalo in Wild Mode will significantly increase computation time. Are you sure you want to continue?</p>
+      <div class="confirm-buttons">
+        <button class="confirm-btn cancel" onclick="cancelAddWord()">Cancel</button>
+        <button class="confirm-btn proceed" onclick="proceedAddWord()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="header">
+    <img src="/BuffaloBuffalo/assets/logo-Bxneovcn.svg" alt="Buffalo on a bicycle" class="logo">
+    <div class="header-text">
+      <h1>BuffaloBuffalo</h1>
+      <p class="subtitle">Construct and visualize <a href="https://en.wikipedia.org/wiki/Buffalo_buffalo_Buffalo_buffalo_buffalo_buffalo_Buffalo_buffalo" target="_blank">Buffalo sentences</a></p>
+    </div>
+    <img src="/BuffaloBuffalo/assets/BuffaloBuffaloTandemBike-D-AS_fVr.jpeg" alt="Two buffalos on a tandem bike" class="hero-image">
+  </div>
 
   <div class="input-section">
-    <div class="buffalo-buttons">
+    <div class="mode-toggle">
+      <label>Mode:</label>
+      <button class="mode-btn active" id="grammar-mode-btn" onclick="setMode('grammar')">Grammar Mode</button>
+      <button class="mode-btn" id="wild-mode-btn" onclick="setMode('wild')">Wild Mode</button>
+      <span class="mode-description" id="mode-description">Specify exact parts of speech</span>
+    </div>
+
+    <div class="buffalo-buttons" id="buffalo-buttons">
       <button class="buffalo-btn btn-pn" draggable="true" data-pos="PN" onclick="addWord('PN')">Adjective</button>
       <button class="buffalo-btn btn-n" draggable="true" data-pos="N" onclick="addWord('N')">Noun</button>
       <button class="buffalo-btn btn-v" draggable="true" data-pos="V" onclick="addWord('V')">Verb</button>
       <button class="buffalo-btn btn-wild" draggable="true" data-pos="WILD" id="wild-btn" onclick="addWord('WILD')">Golden Buffalo ✨</button>
+      <button class="buffalo-btn btn-bison" draggable="true" data-pos="WILD" id="bison-btn" onclick="addWord('WILD')" style="display: none;">Buffalo</button>
       <button class="buffalo-btn btn-clear" onclick="clearSentence()">Clear</button>
     </div>
 
@@ -385,7 +743,10 @@
     </div>
   </div>
 
-  <div class="results-section" id="results" style="display: none;">
+  <div class="results-section" id="results">
+    <div class="empty-state" id="empty-state">
+      <p>Create a sentence above...</p>
+    </div>
     <div class="parse-count" id="parse-count"></div>
 
     <div class="parse-navigation">
@@ -402,7 +763,10 @@
       </div>
     </div>
 
-    <div class="visualization" id="visualization"></div>
+    <div class="parse-content">
+      <div class="visualization" id="visualization"></div>
+      <div class="interpretation" id="interpretation"></div>
+    </div>
 
     <div class="legend">
       <div class="legend-item">
@@ -424,5 +788,11 @@
     </div>
   </div>
 
+
+  <div class="footer">
+    <strong>GitHub:</strong>
+    <a href="https://github.com/ConAcademy/BuffaloBuffalo/blob/main/README.md" target="_blank">README.md</a>
+    <a href="https://github.com/ConAcademy/BuffaloBuffalo/blob/main/PROMPTS.md" target="_blank">PROMPTS.md</a>
+  </div>
 </body>
 </html>

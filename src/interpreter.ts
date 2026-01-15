@@ -16,6 +16,24 @@ interface InterpretContext {
   isMainNoun: boolean;
   /** Depth in the tree (for relative clause handling) */
   depth: number;
+  /** Whether to output HTML with color coding */
+  html: boolean;
+  /** Position counter for superscript numbers (shared object for mutation) */
+  position: { value: number };
+}
+
+// Color classes matching the visualization
+const COLOR_PN = 'interp-pn';  // Purple - location/adjective
+const COLOR_N = 'interp-n';    // Green - noun (bison)
+const COLOR_V = 'interp-v';    // Red - verb (intimidate)
+
+function wrap(text: string, colorClass: string, html: boolean, position?: { value: number }): string {
+  if (!html) return text;
+  if (position) {
+    const pos = position.value++;
+    return `<span class="${colorClass}">${text}<sup class="interp-pos">${pos}</sup></span>`;
+  }
+  return `<span class="${colorClass}">${text}</span>`;
 }
 
 /**
@@ -26,12 +44,45 @@ export function interpretTree(tree: ParseTree): string {
     isSubject: true,
     isMainNoun: true,
     depth: 0,
+    html: false,
+    position: { value: 1 },
   };
 
   const result = interpretNode(tree.root, ctx);
 
   // Capitalize first letter and add period
   return capitalizeFirst(result.trim()) + '.';
+}
+
+/**
+ * Interpret a parse tree into HTML with color-coded parts of speech.
+ */
+export function interpretTreeHTML(tree: ParseTree): string {
+  const ctx: InterpretContext = {
+    isSubject: true,
+    isMainNoun: true,
+    depth: 0,
+    html: true,
+    position: { value: 1 },
+  };
+
+  const result = interpretNode(tree.root, ctx);
+
+  // Capitalize first letter and add period
+  return capitalizeFirstHTML(result.trim()) + '.';
+}
+
+function capitalizeFirstHTML(s: string): string {
+  if (!s) return s;
+  // Handle HTML tags - find all leading tags and first actual character
+  const match = s.match(/^((?:<[^>]+>)*)(.)/);
+  if (match) {
+    const allTags = match[1] || '';
+    const firstChar = match[2]!;
+    const rest = s.slice(allTags.length + 1);
+    return allTags + firstChar.toUpperCase() + rest;
+  }
+  return s;
 }
 
 function capitalizeFirst(s: string): string {
@@ -47,7 +98,7 @@ function interpretNode(node: ParseNode, ctx: InterpretContext): string {
 
   // Terminal nodes
   if (children.length === 0 && word) {
-    return interpretTerminal(symbol, word);
+    return interpretTerminal(symbol, word, ctx);
   }
 
   // Non-terminal nodes
@@ -71,17 +122,18 @@ function interpretNode(node: ParseNode, ctx: InterpretContext): string {
 /**
  * Interpret a terminal node (actual word).
  */
-function interpretTerminal(symbol: string, word: string): string {
+function interpretTerminal(symbol: string, word: string, ctx: InterpretContext): string {
+  const { html, position } = ctx;
   switch (symbol) {
     case 'PN':
       // Proper noun Buffalo = the city (handled specially in NP)
-      return 'Buffalo';
+      return wrap('Buffalo', COLOR_PN, html, position);
     case 'N':
       // Noun buffalo = bison
-      return 'bison';
+      return wrap('bison', COLOR_N, html, position);
     case 'V':
       // Verb buffalo = intimidate
-      return 'intimidate';
+      return wrap('intimidate', COLOR_V, html, position);
     default:
       return word;
   }
@@ -125,16 +177,18 @@ function interpretSentence(children: ParseNode[], ctx: InterpretContext): string
  * Interpret a noun phrase (NP).
  */
 function interpretNounPhrase(children: ParseNode[], ctx: InterpretContext): string {
+  const { html, position } = ctx;
+
   // Single child cases
   if (children.length === 1) {
     const child = children[0]!;
     if (child.symbol === 'N') {
       // NP → N (bare noun)
-      return 'bison';
+      return wrap('bison', COLOR_N, html, position);
     }
     if (child.symbol === 'PN') {
       // NP → PN (proper noun as noun phrase - rare, means the city itself)
-      return 'Buffalo';
+      return wrap('Buffalo', COLOR_PN, html, position);
     }
     return interpretNode(child, ctx);
   }
@@ -146,13 +200,16 @@ function interpretNounPhrase(children: ParseNode[], ctx: InterpretContext): stri
 
     // NP → PN N ("Buffalo buffalo" = bison from Buffalo)
     if (first.symbol === 'PN' && second.symbol === 'N') {
-      return 'bison from Buffalo';
+      // Note: PN comes before N in tree order, so we output in a way that increments correctly
+      const pnPart = wrap('Buffalo', COLOR_PN, html, position);
+      const nPart = wrap('bison', COLOR_N, html, position);
+      return `${nPart} from ${pnPart}`;
     }
 
     // NP → NP N (noun phrase + noun, rare)
     if (first.symbol === 'NP' && second.symbol === 'N') {
       const firstPart = interpretNode(first, { ...ctx, isMainNoun: false });
-      return `${firstPart} bison`;
+      return `${firstPart} ${wrap('bison', COLOR_N, html, position)}`;
     }
 
     // NP → NP RC (noun phrase with relative clause)
@@ -171,13 +228,13 @@ function interpretNounPhrase(children: ParseNode[], ctx: InterpretContext): stri
 
     // NP → DET N
     if (first.symbol === 'DET' && second.symbol === 'N') {
-      return `the bison`;
+      return `the ${wrap('bison', COLOR_N, html, position)}`;
     }
 
     // NP → ADJ N
     if (first.symbol === 'ADJ' && second.symbol === 'N') {
       const adj = interpretNode(first, ctx);
-      return `${adj} bison`;
+      return `${adj} ${wrap('bison', COLOR_N, html, position)}`;
     }
   }
 
@@ -198,9 +255,11 @@ function interpretNounPhrase(children: ParseNode[], ctx: InterpretContext): stri
  * Interpret a verb phrase (VP).
  */
 function interpretVerbPhrase(children: ParseNode[], ctx: InterpretContext): string {
+  const { html, position } = ctx;
+
   if (children.length === 1) {
     // VP → V (intransitive)
-    return 'intimidate';
+    return wrap('intimidate', COLOR_V, html, position);
   }
 
   if (children.length === 2) {
@@ -209,14 +268,16 @@ function interpretVerbPhrase(children: ParseNode[], ctx: InterpretContext): stri
 
     // VP → V NP (transitive)
     if (first.symbol === 'V' && second.symbol === 'NP') {
+      const verb = wrap('intimidate', COLOR_V, html, position);
       const obj = interpretNode(second, { ...ctx, isSubject: false, isMainNoun: false });
-      return `intimidate ${obj}`;
+      return `${verb} ${obj}`;
     }
 
     // VP → V PP
     if (first.symbol === 'V' && second.symbol === 'PP') {
+      const verb = wrap('intimidate', COLOR_V, html, position);
       const pp = interpretNode(second, ctx);
-      return `intimidate ${pp}`;
+      return `${verb} ${pp}`;
     }
   }
 

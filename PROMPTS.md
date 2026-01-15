@@ -238,3 +238,135 @@ it seems that it is drawing the graph of all buffalos rather than using the cons
 ## 2026-01-15T16:03:14Z
 
 when building after push, i see "Argument of type 'ParseNode | undefined' is not assignable to parameter of type 'ParseNode'." at line 115 of interpreter.tsx   how come we didn't find that pre-push?  identify why, then try to fix the problem by witnessing it
+
+---
+
+## 2026-01-15T16:08:58Z
+
+I liked some aspects of the "bug" before where it drew all graphs.   We are going to update the sentence bar to have two modes, "Grammar Mode" which is what we have now, and "Wild Mode" where all the buffalos are wildcard, but since they are plenty, they don't get golden badges.  But in the graph-space and rest of the functions, they serve as wildcards.
+
+---
+
+## 2026-01-15T16:13:27Z
+
+working well, except in wild mode, the only button is a brown buffalo button, along with the clear button.  the sentence bar items can be the same brown.  choose a shade that is close to a full grown male American Bison
+
+---
+
+## 2026-01-15T16:17:00Z
+
+Fixup the favicon to be a buffalo
+
+---
+
+## 2026-01-15T16:18:23Z
+
+on the subtitle, create a hyperlink to the wikipedia page around "Buffalo Sentences" 
+
+---
+
+## 2026-01-15T16:18:51Z
+
+on mobile make the images and header smaller
+
+---
+
+## 2026-01-15T16:21:33Z
+
+in wild mode, going beyond 5 buffalo it starts to have a noticable slowdown.  it makes sense due to the scaling nature of the graph.  we need a alert after 5 wild buffalo that it will take a long time, are you sure?   We also don't have any status or profress indicator, so add some UI for that
+
+---
+
+## 2026-01-15T17:13:54Z
+
+the header is way too big, reduce its margins and make it 80% of current size
+
+---
+
+## 2026-01-15T17:15:15Z
+
+on the reflow in the sentence bar, there is a little overlap between rows
+
+---
+
+## 2026-01-15T17:18:05Z
+
+in wild mode, we should not have any presets.
+
+---
+
+## 2026-01-15T17:18:46Z
+
+whenever we switch to wild mode, populate with a single buffalo
+
+---
+
+## 2026-01-15T17:22:11Z
+
+i want it to clean any existing sentences from Grammar mode, because especially a long sentence becomes a long computation.  it doesn't need to persist, similarly, going to grammar starts with an empty sentence
+
+---
+
+## 2026-01-15T17:23:31Z
+
+when the graph area is empty, put a message in the same box that says "Create a sentence above..." 
+
+---
+
+## 2026-01-15T17:28:23Z
+
+can an adjective alone work?
+
+---
+
+## 2026-01-15T17:29:28Z
+
+no, i mean in the english language, does a single word adjective of buffalo create a valid sentence?
+
+---
+
+## 2026-01-15T17:29:57Z
+
+yes please check and fix that
+
+---
+
+## 2026-01-15T17:31:59Z
+
+in the interpreter window, can you express any aspects of the graph through color coding?
+
+---
+
+## 2026-01-15T17:44:54Z
+
+can there be grouping identifiers somehow, through colored underlines perhaps?  
+
+---
+
+## 2026-01-15T17:48:18Z
+
+the 4,5,and 8 presets create invalid phrases... especially the "famous" one should be the famous hone
+
+---
+
+## 2026-01-15T17:52:15Z
+
+none of them are validating, maybe it is an issue with grammar rules?
+
+---
+
+## 2026-01-15T18:03:29Z
+
+seems like the first word of the meaning is sometimes "Bbison"
+
+---
+
+## 2026-01-15T18:05:26Z
+
+the grouping underlines get confusing, we don't need them.  i do like the color coding in there, maybe we can add a superscript number to correspond to their id?
+
+---
+
+## 2026-01-15T20:55:57Z
+
+the grouping underlines get confusing, we don't need them.  i do like the color coding in there, maybe we can add a superscript number to correspond to their id?

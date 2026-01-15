@@ -77,9 +77,9 @@ export function createEnglishGrammar(): Grammar {
   g.addRule('NP', ['NP', 'PP'], 0.6);
   // NP → NP RC (noun phrase with relative clause)
   g.addRule('NP', ['NP', 'RC'], 0.7);
-  // NP → proper noun (PN terminal tag)
-  g.addRule('NP', ['PN'], 0.8); // Proper noun becomes noun phrase
-  // NP → PN N (proper noun modifying noun, e.g., "Buffalo buffalo")
+  // NP → PN N (proper noun modifying noun, e.g., "Buffalo buffalo" = bison from Buffalo)
+  // Note: We intentionally don't allow NP → PN alone, because "Buffalo" (the city)
+  // only functions as an adjective/modifier in Buffalo sentences, not as a standalone NP
   g.addRule('NP', ['PN', 'N'], 0.85);
   // Compound noun phrases: "buffalo and buffalo"
   g.addRule('NP', ['NP', 'CONJ', 'NP'], 0.6);
