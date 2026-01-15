@@ -154,3 +154,15 @@ I checked with Gemini and agree with you.  Keep Adverb out.
 ## 2026-01-15T14:48:12Z
 
 update the AGENTS.md MEMORY.md PLAN.md README.md with our latest state of affairs
+
+---
+
+## 2026-01-15T14:52:13Z
+
+Changing gears to some DevOps.  I want to serve this on GitHub pages.  Since it is a static site, can you make a GitHub action that builds it and publishes it on every push to main?  I have initialized a git origin for the project at github.com/ConAcademy/BuffaloBuffalo .   Print out what i need to do manually on GitHub
+
+---
+
+## 2026-01-15T14:57:29Z
+
+please test the github action locally before i push.  and actually, please make a simple Taskfile.yml for build, test, run, and actions testing.
