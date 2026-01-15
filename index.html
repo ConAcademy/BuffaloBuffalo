@@ -121,12 +121,41 @@
     .word {
       display: inline-block;
       margin: 0 5px;
-      padding: 5px 10px 5px 28px;
+      padding: 5px 28px 5px 28px;
       border-radius: 4px;
       cursor: grab;
       user-select: none;
       transition: transform 0.1s, opacity 0.1s;
       position: relative;
+    }
+
+    .word-close {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s, background 0.15s;
+      color: white;
+      line-height: 1;
+    }
+
+    .word:hover .word-close {
+      opacity: 1;
+    }
+
+    .word-close:hover {
+      background: rgba(0, 0, 0, 0.5);
     }
 
     .word-pn .word-position { color: #9b59b6; }
@@ -166,6 +195,30 @@
 
     .word.drag-over-left {
       transform: translateX(-10px);
+    }
+
+    .word.poof {
+      animation: poof 0.3s ease-out forwards;
+    }
+
+    @keyframes poof {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.5; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    .poof-emoji {
+      position: fixed;
+      font-size: 48px;
+      pointer-events: none;
+      z-index: 1000;
+      animation: poof-float 0.5s ease-out forwards;
+    }
+
+    @keyframes poof-float {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+      50% { transform: translate(-50%, -80%) scale(1.2); opacity: 1; }
+      100% { transform: translate(-50%, -100%) scale(1); opacity: 0; }
     }
 
     .word-pn { background: #9b59b6; color: white; }
@@ -518,6 +571,11 @@
       e.preventDefault();
       sentenceContainer.classList.remove('drop-active');
 
+      // Mark that a word was dropped inside (for drag-off detection)
+      if (draggedIndex !== null) {
+        wordDroppedInside = true;
+      }
+
       const pos = e.dataTransfer.getData('application/x-pos');
       if (pos) {
         // Insert at calculated position
@@ -591,7 +649,7 @@
         return `<span class="word ${cls}"
                       draggable="true"
                       data-index="${i}"
-                      title="Drag to reorder, double-click to remove"><span class="word-position">${position}</span>${label}</span>`;
+                      title="Drag to reorder or drag off to remove"><span class="word-position">${position}</span>${label}<span class="word-close" data-index="${i}">×</span></span>`;
       }).join('');
 
       // Add drag event listeners
@@ -602,12 +660,53 @@
         el.addEventListener('dragenter', handleDragEnter);
         el.addEventListener('dragleave', handleDragLeave);
         el.addEventListener('drop', handleDrop);
-        el.addEventListener('dblclick', handleDoubleClick);
+      });
+
+      // Add close button click handlers
+      container.querySelectorAll('.word-close').forEach(el => {
+        el.addEventListener('click', handleCloseClick);
       });
     }
 
+    function handleCloseClick(e) {
+      e.stopPropagation();
+      const index = parseInt(e.target.dataset.index);
+      const wordEl = e.target.closest('.word');
+      const rect = wordEl.getBoundingClientRect();
+
+      // Add poof animation
+      wordEl.classList.add('poof');
+      showPoofEmoji(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      setTimeout(() => {
+        removeWord(index);
+      }, 250);
+    }
+
+    function showPoofEmoji(x, y) {
+      const emoji = document.createElement('div');
+      emoji.className = 'poof-emoji';
+      emoji.textContent = '💨';
+      emoji.style.left = x + 'px';
+      emoji.style.top = y + 'px';
+      document.body.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 500);
+    }
+
+    let wordDroppedInside = false;
+    let lastDragX = 0;
+    let lastDragY = 0;
+
+    // Track mouse position during drag (dragend coordinates are unreliable)
+    document.addEventListener('dragover', (e) => {
+      lastDragX = e.clientX;
+      lastDragY = e.clientY;
+    });
+
     function handleDragStart(e) {
       draggedIndex = parseInt(e.target.dataset.index);
+      wordDroppedInside = false;
+      lastDragX = e.clientX;
+      lastDragY = e.clientY;
       e.target.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/plain', draggedIndex);
@@ -618,6 +717,18 @@
       document.querySelectorAll('.word').forEach(el => {
         el.classList.remove('drag-over', 'drag-over-left');
       });
+
+      // If word was dragged outside sentence container, remove with poof
+      if (!wordDroppedInside && draggedIndex !== null) {
+        const wordEl = e.target;
+        wordEl.classList.add('poof');
+        showPoofEmoji(lastDragX, lastDragY);
+        const indexToRemove = draggedIndex;
+        setTimeout(() => {
+          removeWord(indexToRemove);
+        }, 250);
+      }
+
       draggedIndex = null;
     }
 
@@ -640,6 +751,7 @@
 
     function handleDrop(e) {
       e.preventDefault();
+      wordDroppedInside = true;
       const targetIndex = parseInt(e.target.dataset.index);
 
       if (draggedIndex !== null && targetIndex !== draggedIndex) {
@@ -650,11 +762,6 @@
         updateWildcardButton();
         parseSentence();
       }
-    }
-
-    function handleDoubleClick(e) {
-      const index = parseInt(e.target.dataset.index);
-      removeWord(index);
     }
 
     window.removeWord = function(index) {

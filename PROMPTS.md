@@ -100,3 +100,21 @@ for the golden buffalo in the graph, we will keep the color coding of the box to
 ## 2026-01-15T14:16:46Z
 
 lets move the star badge to the upper left of the box it is in, it will look better
+
+---
+
+## 2026-01-15T14:19:33Z
+
+within the sentence bar, for the hovered-over button, add a x close button to remove it from the bar.  also add the ability to drag it off with a poof
+
+---
+
+## 2026-01-15T14:22:46Z
+
+can you add a poof emoji to flash when it's dragged off?
+
+---
+
+## 2026-01-15T14:24:27Z
+
+the boof should be near the point of release
