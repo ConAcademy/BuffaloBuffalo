@@ -158,5 +158,8 @@ export function createBuffaloLexicon(): Lexicon {
   lex.addWord('buffalo', 'V', { tense: 'present', number: 'singular', person: 1 });
   lex.addWord('buffalo', 'V', { tense: 'present', number: 'singular', person: 2 });
 
+  // buffalo (adverb) - in a buffalo-like manner (creative interpretation)
+  lex.addWord('buffalo', 'ADV');
+
   return lex;
 }

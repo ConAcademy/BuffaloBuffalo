@@ -64,3 +64,39 @@ in the sentence input bar, i see the badge circles, but not the numbers in them 
 ## 2026-01-15T13:58:48Z
 
 that fixed it.  i found myself wanting to drag the parts of speech buttons rather than clicking.  i want to support both, can we drag the buttons too into the proper place in the bar?
+
+---
+
+## 2026-01-15T14:02:39Z
+
+i don't think we need a parse button, it works so quickly, we should just rebuild the tree upon change
+
+---
+
+## 2026-01-15T14:06:07Z
+
+it looks like invalid parses are not updating the graph to indicate so?
+
+---
+
+## 2026-01-15T14:08:20Z
+
+i had a lazy prompt, but you figured it out and fixed it, thanks.   can you add a Golden Buffalo badge to the graph for where the wildcard is used?
+
+---
+
+## 2026-01-15T14:10:59Z
+
+we need an adverb button too
+
+---
+
+## 2026-01-15T14:13:40Z
+
+for the golden buffalo in the graph, we will keep the color coding of the box to match the part of speech, but put a gold starry badge in the box, next to its number
+
+---
+
+## 2026-01-15T14:16:46Z
+
+lets move the star badge to the upper left of the box it is in, it will look better

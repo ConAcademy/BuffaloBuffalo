@@ -11,6 +11,7 @@ export interface RenderConfig extends Partial<LayoutConfig> {
     line?: string;
     background?: string;
   };
+  wildcardPosition?: number; // 1-indexed position of Golden Buffalo wildcard
 }
 
 // POS-specific colors matching the UI
@@ -18,6 +19,7 @@ const POS_COLORS: Record<string, string> = {
   PN: '#9b59b6',  // Purple - Adjective (proper noun/city)
   N: '#2ecc71',   // Green - Noun (animal)
   V: '#e74c3c',   // Red - Verb (intimidate)
+  ADV: '#3498db', // Blue - Adverb
 };
 
 const DEFAULT_COLORS = {
@@ -40,7 +42,7 @@ export function renderTreeToSVG(tree: ParseTree, config: RenderConfig = {}): str
   const { root, width, height } = layout;
 
   const lines = renderLines(root, colors.line);
-  const nodes = renderNodes(root, colors);
+  const nodes = renderNodes(root, colors, config.wildcardPosition);
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">
   <style>
@@ -81,8 +83,10 @@ function renderLines(node: LayoutNode, color: string): string {
   return svg;
 }
 
-function renderNodes(node: LayoutNode, colors: typeof DEFAULT_COLORS): string {
+function renderNodes(node: LayoutNode, colors: typeof DEFAULT_COLORS, wildcardPosition?: number): string {
   let svg = '';
+
+  const isWildcard = node.isTerminal && node.position === wildcardPosition;
 
   // Determine node color based on POS for terminals, default blue for phrases
   let fillColor = colors.node;
@@ -92,7 +96,7 @@ function renderNodes(node: LayoutNode, colors: typeof DEFAULT_COLORS): string {
 
   const rectHeight = node.isTerminal && node.word ? node.height / 2 : node.height;
 
-  // Node rectangle
+  // Node rectangle (keep POS color even for wildcard)
   svg += `
   <rect class="node-rect"
         x="${node.x}" y="${node.y}"
@@ -115,6 +119,17 @@ function renderNodes(node: LayoutNode, colors: typeof DEFAULT_COLORS): string {
     <text class="position-badge"
           x="${badgeX}" y="${badgeY + 10}"
           text-anchor="middle" fill="${fillColor}">${node.position}</text>`;
+
+    // Golden star badge for wildcard (top-left corner)
+    if (isWildcard) {
+      const starX = node.x + 12;
+      const starY = node.y + 4;
+      svg += `
+    <circle cx="${starX}" cy="${starY + 6}" r="8" fill="#f1c40f" stroke="#b8860b" stroke-width="1.5" />
+    <text class="position-badge"
+          x="${starX}" y="${starY + 10}"
+          text-anchor="middle" fill="#333">✨</text>`;
+    }
   }
 
   // Word label for terminals
@@ -127,7 +142,7 @@ function renderNodes(node: LayoutNode, colors: typeof DEFAULT_COLORS): string {
 
   // Render children
   for (const child of node.children) {
-    svg += renderNodes(child, colors);
+    svg += renderNodes(child, colors, wildcardPosition);
   }
 
   return svg;

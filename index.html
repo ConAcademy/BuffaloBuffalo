@@ -69,6 +69,7 @@
     .btn-pn { background: #9b59b6; color: white; }
     .btn-n { background: #2ecc71; color: white; }
     .btn-v { background: #e74c3c; color: white; }
+    .btn-adv { background: #3498db; color: white; }
     .btn-wild {
       background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
       color: #333;
@@ -76,7 +77,6 @@
       box-shadow: 0 2px 8px rgba(241, 196, 15, 0.4);
     }
     .btn-clear { background: #95a5a6; color: white; }
-    .btn-parse { background: #3498db; color: white; font-weight: bold; }
 
     .sentence-display {
       font-size: 24px;
@@ -132,6 +132,7 @@
     .word-pn .word-position { color: #9b59b6; }
     .word-n .word-position { color: #2ecc71; }
     .word-v .word-position { color: #e74c3c; }
+    .word-adv .word-position { color: #3498db; }
     .word-wild .word-position { color: #b8860b; }
 
     .word-position {
@@ -170,6 +171,7 @@
     .word-pn { background: #9b59b6; color: white; }
     .word-n { background: #2ecc71; color: white; }
     .word-v { background: #e74c3c; color: white; }
+    .word-adv { background: #3498db; color: white; }
     .word-wild {
       background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
       color: #333;
@@ -274,8 +276,11 @@
     .no-parses {
       text-align: center;
       padding: 40px;
-      color: #7f8c8d;
+      color: #e74c3c;
       font-size: 18px;
+      background: #fdf2f2;
+      border-radius: 8px;
+      border: 2px dashed #e74c3c;
     }
 
     .legend {
@@ -314,9 +319,9 @@
       <button class="buffalo-btn btn-pn" draggable="true" data-pos="PN" onclick="addWord('PN')">Adjective</button>
       <button class="buffalo-btn btn-n" draggable="true" data-pos="N" onclick="addWord('N')">Noun</button>
       <button class="buffalo-btn btn-v" draggable="true" data-pos="V" onclick="addWord('V')">Verb</button>
+      <button class="buffalo-btn btn-adv" draggable="true" data-pos="ADV" onclick="addWord('ADV')">Adverb</button>
       <button class="buffalo-btn btn-wild" draggable="true" data-pos="WILD" id="wild-btn" onclick="addWord('WILD')">Golden Buffalo ✨</button>
       <button class="buffalo-btn btn-clear" onclick="clearSentence()">Clear</button>
-      <button class="buffalo-btn btn-parse" onclick="parseSentence()">Parse!</button>
     </div>
 
     <div class="sentence-display" id="sentence"></div>
@@ -363,6 +368,10 @@
         <span>Verb (buffalo)</span>
       </div>
       <div class="legend-item">
+        <div class="legend-color" style="background: #3498db;"></div>
+        <span>Adverb (buffalo)</span>
+      </div>
+      <div class="legend-item">
         <div class="legend-color golden"></div>
         <span>Wildcard (any)</span>
       </div>
@@ -384,6 +393,11 @@
       return words.some(w => w.pos === 'WILD');
     }
 
+    function getWildcardPosition() {
+      const index = words.findIndex(w => w.pos === 'WILD');
+      return index >= 0 ? index + 1 : undefined; // 1-indexed
+    }
+
     function updateWildcardButton() {
       const btn = document.getElementById('wild-btn');
       btn.disabled = hasWildcard();
@@ -395,6 +409,7 @@
       words.push({ word: 'buffalo', pos });
       renderSentence();
       updateWildcardButton();
+      parseSentence();
     };
 
     window.clearSentence = function() {
@@ -438,6 +453,7 @@
       words = presets[count] || [];
       renderSentence();
       updateWildcardButton();
+      parseSentence();
     };
 
     let draggedIndex = null;
@@ -511,6 +527,7 @@
         words.splice(insertIndex, 0, { word: 'buffalo', pos });
         renderSentence();
         updateWildcardButton();
+        parseSentence();
       }
 
       removeDragIndicators();
@@ -568,7 +585,7 @@
           cls = 'word-wild';
         } else {
           label = w.pos === 'PN' ? 'Buffalo' : 'buffalo';
-          cls = w.pos === 'PN' ? 'word-pn' : w.pos === 'N' ? 'word-n' : 'word-v';
+          cls = w.pos === 'PN' ? 'word-pn' : w.pos === 'N' ? 'word-n' : w.pos === 'V' ? 'word-v' : 'word-adv';
         }
         const position = i + 1;
         return `<span class="word ${cls}"
@@ -631,6 +648,7 @@
         words.splice(targetIndex, 0, moved);
         renderSentence();
         updateWildcardButton();
+        parseSentence();
       }
     }
 
@@ -643,14 +661,18 @@
       words.splice(index, 1);
       renderSentence();
       updateWildcardButton();
+      parseSentence();
     };
 
     window.parseSentence = function() {
-      if (words.length === 0) return;
+      if (words.length === 0) {
+        document.getElementById('results').style.display = 'none';
+        return;
+      }
 
       // Expand wildcards into all possible POS combinations
       const allTrees = [];
-      const posOptions = ['PN', 'N', 'V'];
+      const posOptions = ['PN', 'N', 'V', 'ADV'];
 
       function expandWildcards(wordList, index, current) {
         if (index >= wordList.length) {
@@ -687,9 +709,12 @@
       const resultsEl = document.getElementById('results');
       resultsEl.style.display = 'block';
 
+      // Always clear previous visualization first
+      document.getElementById('visualization').innerHTML = '';
+
       if (parseTrees.length === 0) {
-        document.getElementById('parse-count').textContent = 'No valid parses found';
-        document.getElementById('visualization').innerHTML = '<div class="no-parses">Try a different combination!</div>';
+        document.getElementById('parse-count').textContent = '⚠️ No valid parses found';
+        document.getElementById('visualization').innerHTML = '<div class="no-parses">This combination doesn\'t form a valid sentence.<br>Try a different arrangement!</div>';
         document.querySelector('.parse-navigation').style.display = 'none';
       } else {
         document.getElementById('parse-count').textContent = `Found ${parseTrees.length} valid parse${parseTrees.length > 1 ? 's' : ''}`;
@@ -719,7 +744,8 @@
 
     window.rerender = function() {
       const style = document.getElementById('style-select').value;
-      const svg = renderTreeToSVG(parseTrees[currentParse], { style });
+      const wildcardPosition = getWildcardPosition();
+      const svg = renderTreeToSVG(parseTrees[currentParse], { style, wildcardPosition });
       document.getElementById('visualization').innerHTML = svg;
     };
 
