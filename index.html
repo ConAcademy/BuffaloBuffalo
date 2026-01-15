@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuffaloBuffalo - Sentence Parser</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #7f8c8d;
+      margin-bottom: 30px;
+    }
+
+    .input-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .buffalo-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .buffalo-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 0.1s;
+    }
+
+    .buffalo-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .buffalo-btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn-pn { background: #9b59b6; color: white; }
+    .btn-n { background: #2ecc71; color: white; }
+    .btn-v { background: #e74c3c; color: white; }
+    .btn-clear { background: #95a5a6; color: white; }
+    .btn-parse { background: #3498db; color: white; font-weight: bold; }
+
+    .sentence-display {
+      font-size: 24px;
+      font-family: Georgia, serif;
+      padding: 15px;
+      background: #ecf0f1;
+      border-radius: 4px;
+      min-height: 60px;
+      margin-bottom: 15px;
+    }
+
+    .word {
+      display: inline-block;
+      margin: 0 5px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .word-pn { background: #9b59b6; color: white; }
+    .word-n { background: #2ecc71; color: white; }
+    .word-v { background: #e74c3c; color: white; }
+
+    .presets {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .presets label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .preset-btn {
+      padding: 5px 10px;
+      margin: 5px;
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .preset-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .results-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .parse-count {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    .parse-navigation {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      border: none;
+      background: #3498db;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .nav-btn:disabled {
+      background: #bdc3c7;
+      cursor: not-allowed;
+    }
+
+    .style-toggle {
+      margin-left: auto;
+    }
+
+    .style-toggle label {
+      margin-right: 10px;
+    }
+
+    .visualization {
+      overflow-x: auto;
+      padding: 20px;
+      background: white;
+      border: 1px solid #eee;
+      border-radius: 4px;
+    }
+
+    .visualization svg {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .no-parses {
+      text-align: center;
+      padding: 40px;
+      color: #7f8c8d;
+      font-size: 18px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>BuffaloBuffalo</h1>
+  <p class="subtitle">Construct and visualize Buffalo sentences</p>
+
+  <div class="input-section">
+    <div class="buffalo-buttons">
+      <button class="buffalo-btn btn-pn" onclick="addWord('PN')">Buffalo (city)</button>
+      <button class="buffalo-btn btn-n" onclick="addWord('N')">buffalo (animal)</button>
+      <button class="buffalo-btn btn-v" onclick="addWord('V')">buffalo (verb)</button>
+      <button class="buffalo-btn btn-clear" onclick="clearSentence()">Clear</button>
+      <button class="buffalo-btn btn-parse" onclick="parseSentence()">Parse!</button>
+    </div>
+
+    <div class="sentence-display" id="sentence"></div>
+
+    <div class="presets">
+      <label>Presets:</label>
+      <button class="preset-btn" onclick="loadPreset(3)">3 words</button>
+      <button class="preset-btn" onclick="loadPreset(4)">4 words</button>
+      <button class="preset-btn" onclick="loadPreset(5)">5 words</button>
+      <button class="preset-btn" onclick="loadPreset(8)">8 words (famous)</button>
+    </div>
+  </div>
+
+  <div class="results-section" id="results" style="display: none;">
+    <div class="parse-count" id="parse-count"></div>
+
+    <div class="parse-navigation">
+      <button class="nav-btn" id="prev-btn" onclick="showParse(currentParse - 1)">← Previous</button>
+      <span id="parse-index">1 / 1</span>
+      <button class="nav-btn" id="next-btn" onclick="showParse(currentParse + 1)">Next →</button>
+
+      <div class="style-toggle">
+        <label>Style:</label>
+        <select id="style-select" onchange="rerender()">
+          <option value="tree">Tree</option>
+          <option value="reed-kellogg">Reed-Kellogg</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="visualization" id="visualization"></div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color" style="background: #4a90d9;"></div>
+        <span>Phrase</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #2ecc71;"></div>
+        <span>Word (POS)</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { EarleyParser, createEnglishGrammar, createBuffaloLexicon, renderTreeToSVG } from './src/index.js';
+
+    const grammar = createEnglishGrammar();
+    const lexicon = createBuffaloLexicon();
+    const parser = new EarleyParser(grammar, lexicon);
+
+    window.words = [];
+    window.parseTrees = [];
+    window.currentParse = 0;
+
+    window.addWord = function(pos) {
+      words.push({ word: 'buffalo', pos });
+      renderSentence();
+    };
+
+    window.clearSentence = function() {
+      words = [];
+      renderSentence();
+      document.getElementById('results').style.display = 'none';
+    };
+
+    window.loadPreset = function(count) {
+      // Famous 8-word interpretation:
+      // [Buffalo buffalo] [Buffalo buffalo buffalo] [buffalo] [Buffalo buffalo]
+      // Subject: Buffalo bison (that) Buffalo bison bully, bully Buffalo bison
+      const presets = {
+        3: [
+          { word: 'buffalo', pos: 'PN' },  // Buffalo
+          { word: 'buffalo', pos: 'N' },   // buffalo (bison)
+          { word: 'buffalo', pos: 'V' },   // buffalo (intimidate)
+        ],
+        4: [
+          { word: 'buffalo', pos: 'PN' },
+          { word: 'buffalo', pos: 'N' },
+          { word: 'buffalo', pos: 'V' },
+          { word: 'buffalo', pos: 'N' },
+        ],
+        5: [
+          { word: 'buffalo', pos: 'PN' },
+          { word: 'buffalo', pos: 'N' },
+          { word: 'buffalo', pos: 'V' },
+          { word: 'buffalo', pos: 'PN' },
+          { word: 'buffalo', pos: 'N' },
+        ],
+        8: [
+          { word: 'buffalo', pos: 'PN' },
+          { word: 'buffalo', pos: 'N' },
+          { word: 'buffalo', pos: 'PN' },
+          { word: 'buffalo', pos: 'N' },
+          { word: 'buffalo', pos: 'V' },
+          { word: 'buffalo', pos: 'V' },
+          { word: 'buffalo', pos: 'PN' },
+          { word: 'buffalo', pos: 'N' },
+        ],
+      };
+      words = presets[count] || [];
+      renderSentence();
+    };
+
+    function renderSentence() {
+      const container = document.getElementById('sentence');
+      if (words.length === 0) {
+        container.innerHTML = '<span style="color: #999;">Click buttons above to build a sentence...</span>';
+        return;
+      }
+
+      container.innerHTML = words.map((w, i) => {
+        const label = w.pos === 'PN' ? 'Buffalo' : 'buffalo';
+        const cls = w.pos === 'PN' ? 'word-pn' : w.pos === 'N' ? 'word-n' : 'word-v';
+        return `<span class="word ${cls}" onclick="removeWord(${i})" title="Click to remove">${label}</span>`;
+      }).join('');
+    }
+
+    window.removeWord = function(index) {
+      words.splice(index, 1);
+      renderSentence();
+    };
+
+    window.parseSentence = function() {
+      if (words.length === 0) return;
+
+      const sentence = words.map(w => w.pos === 'PN' ? 'Buffalo' : 'buffalo');
+      const result = parser.parse(sentence);
+
+      parseTrees = result.trees;
+      currentParse = 0;
+
+      const resultsEl = document.getElementById('results');
+      resultsEl.style.display = 'block';
+
+      if (parseTrees.length === 0) {
+        document.getElementById('parse-count').textContent = 'No valid parses found';
+        document.getElementById('visualization').innerHTML = '<div class="no-parses">Try a different combination!</div>';
+        document.querySelector('.parse-navigation').style.display = 'none';
+      } else {
+        document.getElementById('parse-count').textContent = `Found ${parseTrees.length} valid parse${parseTrees.length > 1 ? 's' : ''}`;
+        document.querySelector('.parse-navigation').style.display = 'flex';
+        showParse(0);
+      }
+    };
+
+    window.showParse = function(index) {
+      if (index < 0 || index >= parseTrees.length) return;
+
+      currentParse = index;
+      document.getElementById('parse-index').textContent = `${index + 1} / ${parseTrees.length}`;
+      document.getElementById('prev-btn').disabled = index === 0;
+      document.getElementById('next-btn').disabled = index === parseTrees.length - 1;
+
+      rerender();
+    };
+
+    window.rerender = function() {
+      const style = document.getElementById('style-select').value;
+      const svg = renderTreeToSVG(parseTrees[currentParse], { style });
+      document.getElementById('visualization').innerHTML = svg;
+    };
+
+    // Initialize
+    renderSentence();
+  </script>
+</body>
+</html>

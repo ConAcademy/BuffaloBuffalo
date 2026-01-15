@@ -16,3 +16,9 @@ alright implement step one of the plan
 ## 2026-01-15T12:32:00Z
 
 implement phase 2
+
+---
+
+## 2026-01-15T12:41:36Z
+
+i have no idea what you are doing, i'm in full vibe, so might as well visualize it :) 

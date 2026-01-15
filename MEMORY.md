@@ -59,8 +59,17 @@ interface LexiconEntry {
 }
 ```
 
+## Resolved Decisions
+
+### UI Framework: Vanilla TypeScript
+- **Decision:** No framework, pure vanilla TypeScript + HTML
+- **Rationale:**
+  - Zero runtime dependencies
+  - Vite handles ES module bundling
+  - Simple enough app doesn't need reactivity framework
+  - Smallest possible bundle size
+
 ## Open Questions
-- [ ] Which lightweight framework to use? (Candidates: vanilla, Lit, Preact)
 - [ ] LLM API choice for interpretation feature
 - [ ] Should we support other homophone sentences beyond Buffalo?
 

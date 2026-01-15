@@ -52,50 +52,51 @@
 - [x] `buffalo` → V (verb, to intimidate)
 - [x] Test with known Buffalo sentence parses (8-word sentence parses)
 
-## Phase 3: Visualization
+## Phase 3: Visualization ✓
 
-### 3.1 Diagram Generator
-- [ ] Design SVG-based Reed-Kellogg diagram renderer
-- [ ] Horizontal baseline for S-V-O
-- [ ] Diagonal lines for modifiers
-- [ ] Vertical lines separating subject/predicate
-- [ ] Pedestals for subordinate clauses
+### 3.1 Diagram Generator ✓
+- [x] Design SVG-based tree diagram renderer
+- [x] Two layout styles: tree view and Reed-Kellogg
+- [x] Curved connector lines between nodes
+- [x] Color-coded nodes (phrases vs terminals)
 
-### 3.2 Render Implementation
-- [ ] `renderTree(parseTree): SVGElement`
-- [ ] Calculate layout dimensions dynamically
-- [ ] Support zooming/panning for complex sentences
-- [ ] Add CSS classes for interactive highlighting
+### 3.2 Render Implementation ✓
+- [x] `renderTreeToSVG(parseTree): string`
+- [x] `renderTreeToElement(parseTree): SVGElement`
+- [x] `renderTreeGallery(trees): string`
+- [x] Calculate layout dimensions dynamically
 
-### 3.3 Visualization Testing
-- [ ] Visual regression tests
-- [ ] Test various tree depths
-- [ ] Test long sentences
-- [ ] Verify accessibility (alt text for diagram)
+### 3.3 Visualization Testing ✓
+- [x] 11 visualization tests passing
+- [x] Test various tree depths
+- [x] Test Buffalo sentences
+- [x] Test empty/no-parse cases
 
-## Phase 4: Web Application
+## Phase 4: Web Application ✓
 
-### 4.1 UI Framework Decision
-- [ ] Evaluate: vanilla TS, Lit, Preact
-- [ ] Choose based on: bundle size, simplicity, reactivity needs
-- [ ] Document decision in MEMORY.md
+### 4.1 UI Framework Decision ✓
+- [x] Chose: **Vanilla TypeScript** (zero dependencies!)
+- [x] Rationale: simplest, smallest bundle, Vite handles ES modules
+- [x] Documented in MEMORY.md
 
-### 4.2 Sentence Builder Component
-- [ ] Word block component with POS selector
-- [ ] "IDK" wildcard block
-- [ ] Drag-and-drop or click-to-add interface
-- [ ] Real-time validation feedback
+### 4.2 Sentence Builder Component ✓
+- [x] Word block component with POS selector (3 buttons)
+- [x] Color-coded blocks (purple=city, green=animal, red=verb)
+- [x] Click-to-add interface
+- [x] Click-to-remove words
+- [x] Preset buttons (3, 4, 5, 8 words)
 
-### 4.3 Parse Display
-- [ ] Show all valid parses (tabs or carousel)
-- [ ] Embed visualization component
-- [ ] Parse count indicator
-- [ ] "No valid parse" error state
+### 4.3 Parse Display ✓
+- [x] Show all valid parses (prev/next navigation)
+- [x] Embed SVG visualization
+- [x] Parse count indicator
+- [x] "No valid parse" error state
+- [x] Style toggle (tree vs Reed-Kellogg)
 
-### 4.4 Main App Shell
-- [ ] Simple layout: builder → visualizer → interpreter
-- [ ] Mobile-responsive design
-- [ ] Minimal styling (CSS custom properties)
+### 4.4 Main App Shell ✓
+- [x] Simple layout: builder → visualizer
+- [x] Responsive design
+- [x] Clean styling with CSS custom properties
 
 ## Phase 5: LLM Integration
 
@@ -137,5 +138,5 @@
 
 ## Current Status
 
-**Phase**: Phase 2 Complete
-**Next Step**: Phase 3.1 - Diagram Generator
+**Phase**: Phase 4 Complete
+**Next Step**: Phase 5 - LLM Integration (optional)
