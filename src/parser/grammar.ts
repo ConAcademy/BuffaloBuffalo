@@ -73,8 +73,6 @@ export function createEnglishGrammar(): Grammar {
   g.addRule('NP', ['DET', 'ADJ', 'N'], 0.8);
   // NP → ADJ N (no determiner)
   g.addRule('NP', ['ADJ', 'N'], 0.5);
-  // NP → NP (proper noun) N - e.g., "Buffalo buffalo" (Buffalo bison)
-  g.addRule('NP', ['NP', 'N'], 0.7);
   // NP → NP PP (noun phrase with prepositional phrase)
   g.addRule('NP', ['NP', 'PP'], 0.6);
   // NP → NP RC (noun phrase with relative clause)

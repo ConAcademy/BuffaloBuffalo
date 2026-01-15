@@ -323,6 +323,53 @@
       margin: 0 auto;
     }
 
+    .parse-content {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .parse-content .visualization {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .interpretation {
+      flex: 0 0 250px;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 8px;
+      border-left: 4px solid #3498db;
+      font-size: 16px;
+      font-style: italic;
+      color: #2c3e50;
+    }
+
+    .interpretation:empty {
+      display: none;
+    }
+
+    .interpretation-label {
+      font-size: 11px;
+      font-style: normal;
+      font-weight: bold;
+      color: #7f8c8d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .parse-content {
+        flex-direction: column;
+      }
+
+      .interpretation {
+        flex: none;
+        width: 100%;
+      }
+    }
+
     .no-parses {
       text-align: center;
       padding: 40px;
@@ -457,7 +504,10 @@
       </div>
     </div>
 
-    <div class="visualization" id="visualization"></div>
+    <div class="parse-content">
+      <div class="visualization" id="visualization"></div>
+      <div class="interpretation" id="interpretation"></div>
+    </div>
 
     <div class="legend">
       <div class="legend-item">
@@ -480,7 +530,7 @@
   </div>
 
   <script type="module">
-    import { EarleyParser, createEnglishGrammar, createBuffaloLexicon, renderTreeToSVG } from './src/index.js';
+    import { EarleyParser, createEnglishGrammar, createBuffaloLexicon, renderTreeToSVG, interpretTree } from './src/index.js';
 
     const grammar = createEnglishGrammar();
     const lexicon = createBuffaloLexicon();
@@ -830,12 +880,31 @@
       const allTrees = [];
       const posOptions = ['PN', 'N', 'V'];
 
+      // Get terminal POS tags from a parse tree in order
+      function getTreePOS(node) {
+        if (node.children.length === 0) {
+          return [node.symbol];
+        }
+        return node.children.flatMap(c => getTreePOS(c));
+      }
+
+      // Check if a tree's POS sequence matches the user's constraints
+      function treeMatchesConstraints(tree, constraints) {
+        const treePOS = getTreePOS(tree.root);
+        if (treePOS.length !== constraints.length) return false;
+        return constraints.every((c, i) => c === 'WILD' || c === treePOS[i]);
+      }
+
       function expandWildcards(wordList, index, current) {
         if (index >= wordList.length) {
           // Parse this combination
           const sentence = current.map(w => w.pos === 'PN' ? 'Buffalo' : 'buffalo');
           const result = parser.parse(sentence);
-          allTrees.push(...result.trees);
+
+          // Filter trees to match user's POS constraints
+          const constraints = current.map(w => w.pos);
+          const matchingTrees = result.trees.filter(t => treeMatchesConstraints(t, constraints));
+          allTrees.push(...matchingTrees);
           return;
         }
 
@@ -865,8 +934,9 @@
       const resultsEl = document.getElementById('results');
       resultsEl.style.display = 'block';
 
-      // Always clear previous visualization first
+      // Always clear previous visualization and interpretation first
       document.getElementById('visualization').innerHTML = '';
+      document.getElementById('interpretation').innerHTML = '';
 
       if (parseTrees.length === 0) {
         document.getElementById('parse-count').textContent = '⚠️ No valid parses found';
@@ -901,8 +971,16 @@
     window.rerender = function() {
       const style = document.getElementById('style-select').value;
       const wildcardPosition = getWildcardPosition();
-      const svg = renderTreeToSVG(parseTrees[currentParse], { style, wildcardPosition });
+      const tree = parseTrees[currentParse];
+      const svg = renderTreeToSVG(tree, { style, wildcardPosition });
       document.getElementById('visualization').innerHTML = svg;
+
+      // Show interpretation
+      const interpretation = interpretTree(tree);
+      document.getElementById('interpretation').innerHTML = `
+        <div class="interpretation-label">Meaning</div>
+        ${interpretation}
+      `;
     };
 
     // Initialize

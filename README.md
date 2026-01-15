@@ -1,10 +1,15 @@
 # BuffaloBuffalo
 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://conacademy.github.io/BuffaloBuffalo/)
+[![Build Status](https://github.com/ConAcademy/BuffaloBuffalo/actions/workflows/deploy.yml/badge.svg)](https://github.com/ConAcademy/BuffaloBuffalo/actions/workflows/deploy.yml)
 
 <p align="center">
   <img src="images/logo.svg" alt="Buffalo Buffalo Logo" width="300">
   <img src="images/BuffaloBuffaloTandemBike.jpeg" alt="Two buffalos on a tandem bike" width="280">
+</p>
+
+<p align="center">
+  <strong><a href="https://conacademy.github.io/BuffaloBuffalo/">Try the Live Demo</a></strong>
 </p>
 
 A web application for constructing, visualizing, and interpreting [Buffalo sentences](https://en.wikipedia.org/wiki/Buffalo_buffalo_Buffalo_buffalo_buffalo_buffalo_Buffalo_buffalo) — the classic linguistic example demonstrating how a single word can function as multiple parts of speech.
@@ -49,6 +54,7 @@ Then open http://localhost:5173 in your browser.
 - Parse trees update **automatically** as you build
 - Use **← Previous / Next →** to browse multiple valid parses
 - Toggle between **Tree** and **Reed-Kellogg** diagram styles
+- **Plain English interpretation** shown below each parse tree
 - Invalid combinations show a helpful error message
 
 ## Scripts
@@ -67,6 +73,7 @@ npm run typecheck  # Check TypeScript types
 - **Sentence Builder**: Click or drag to construct Buffalo sentences
 - **Golden Buffalo Wildcard**: Mystery word that tries all parts of speech
 - **Auto-Parsing**: Instant parse tree updates on every change
+- **Plain English Interpreter**: Converts parse trees to readable sentences
 - **Earley Parser**: Handles ambiguous grammars, returns all valid parses
 - **Tree Deduplication**: Filters out identical parse structures
 - **Visualization**: SVG-based tree diagrams with two layout styles
@@ -92,6 +99,7 @@ BuffaloBuffalo/
 ├── src/
 │   ├── index.ts         # Main exports
 │   ├── types.ts         # Type definitions
+│   ├── interpreter.ts   # Parse tree to English
 │   ├── parser/
 │   │   ├── lexicon.ts   # Word dictionary
 │   │   ├── grammar.ts   # CFG rules

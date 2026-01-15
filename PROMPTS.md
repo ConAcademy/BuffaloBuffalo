@@ -202,3 +202,33 @@ put the README link at the bottom right of the page.  The title and subtitle sho
 ## 2026-01-15T15:24:53Z
 
 Bottom left footer should be: "GitHub: README.md PROMPTS.md" with GitHub: in bold and the respective links for the md file
+
+---
+
+## 2026-01-15T15:32:23Z
+
+so i mentioned taking the tree and turning it into an intelligible sentence.   before we do that with LLMs, can we just do that imperatively knowing the relationships of the parts of speech and standard filler?
+
+---
+
+## 2026-01-15T15:40:50Z
+
+in the README, add a link to the live demo in full text under the images.  i see the badge, that's great, but also add a GitHub action status badge
+
+---
+
+## 2026-01-15T15:43:30Z
+
+this is taking a lot of vertical space.  put the meaning to the right of the graph.   it should all flow properly on mobile
+
+---
+
+## 2026-01-15T15:52:03Z
+
+it is showing  three nouns as valid.  is that true?  the meaning shows to be "bison bison bison"
+
+---
+
+## 2026-01-15T15:57:16Z
+
+it seems that it is drawing the graph of all buffalos rather than using the constraints in the sentence bar

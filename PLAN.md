@@ -118,24 +118,23 @@
 - [x] Clean styling with CSS custom properties
 - [x] Legend showing color meanings
 
-## Phase 5: LLM Integration (Future)
+## Phase 5: Interpretation ✓
 
-### 5.1 API Design
+### 5.1 Rule-Based Interpreter ✓
+- [x] Create interpreter module (`src/interpreter.ts`)
+- [x] Recursive tree traversal
+- [x] PN → "Buffalo" (city) or "from Buffalo" when modifying noun
+- [x] N → "bison"
+- [x] V → "intimidate"
+- [x] Handle relative clauses with "that"
+- [x] Display interpretation below parse tree in UI
+
+### 5.2 LLM Integration (Future/Optional)
 - [ ] Define request format: sentence + parse tree + POS tags
 - [ ] Define response format: interpretation string
-- [ ] Handle API errors gracefully
-
-### 5.2 Integration
 - [ ] Implement API client (fetch-based)
 - [ ] Add loading state during inference
-- [ ] Display interpretation below diagram
 - [ ] Cache responses to avoid duplicate calls
-
-### 5.3 Prompt Engineering
-- [ ] Design prompt that explains the parse structure
-- [ ] Include POS annotations in context
-- [ ] Request natural English interpretation
-- [ ] Test with various Buffalo sentence parses
 
 ## Phase 6: Polish (Future)
 
@@ -160,6 +159,6 @@
 
 ## Current Status
 
-**Phase**: Phase 4 Complete (Web Application)
-**Tests**: 52 passing
-**Next Step**: Phase 5 - LLM Integration (optional feature)
+**Phase**: Phase 5 Complete (Interpretation)
+**Tests**: 58 passing
+**Next Step**: Phase 6 - Polish (optional)
