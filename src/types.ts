@@ -6,7 +6,7 @@
 export type PartOfSpeech =
   | 'N'      // Noun
   | 'V'      // Verb
-  | 'NP'     // Proper Noun
+  | 'PN'     // Proper Noun (renamed from NP to avoid collision with NP non-terminal)
   | 'DET'    // Determiner (the, a, an)
   | 'ADJ'    // Adjective
   | 'ADV'    // Adverb

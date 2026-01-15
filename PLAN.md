@@ -16,41 +16,41 @@
 - [x] Define `NonTerminal` and `GrammarSymbol` types
 - [x] Define `GrammaticalFeatures` for agreement
 
-## Phase 2: Parse Tree Generator
+## Phase 2: Parse Tree Generator ✓
 
-### 2.1 Lexicon System
-- [ ] Create `Lexicon` class with word lookup
-- [ ] Implement `addWord(word, pos, features?)` method
-- [ ] Implement `lookup(word): LexiconEntry[]` returning all POS options
-- [ ] Create test lexicon with common English words (not Buffalo)
+### 2.1 Lexicon System ✓
+- [x] Create `Lexicon` class with word lookup
+- [x] Implement `addWord(word, pos, features?)` method
+- [x] Implement `lookup(word): LexiconEntry[]` returning all POS options
+- [x] Create test lexicon with common English words (not Buffalo)
 
-### 2.2 Grammar Rules
-- [ ] Define CFG rules for English sentence structure
-- [ ] S → NP VP (basic sentence)
-- [ ] NP → (DET) (ADJ)* N (PP)* (relative clause)
-- [ ] VP → V (NP) (PP)*
-- [ ] Relative clause → (that/which) S | reduced relative
-- [ ] Handle reduced relative clauses (critical for Buffalo sentences)
+### 2.2 Grammar Rules ✓
+- [x] Define CFG rules for English sentence structure
+- [x] S → NP VP (basic sentence)
+- [x] NP → (DET) (ADJ)* N (PP)* (relative clause)
+- [x] VP → V (NP) (PP)*
+- [x] Relative clause → (that/which) S | reduced relative
+- [x] Handle reduced relative clauses (critical for Buffalo sentences)
 
-### 2.3 Parser Implementation
-- [ ] Implement CYK or Earley parser for ambiguous grammars
-- [ ] Return all valid parse trees (not just first match)
-- [ ] Add probability/preference scoring for ranking parses
-- [ ] Handle unknown words gracefully
+### 2.3 Parser Implementation ✓
+- [x] Implement Earley parser for ambiguous grammars
+- [x] Return all valid parse trees (not just first match)
+- [x] Add probability scoring for ranking parses
+- [x] Handle unknown words gracefully (returns empty parse)
 
-### 2.4 Parser Testing
-- [ ] Write unit tests with non-Buffalo sentences
-- [ ] Test: "The dog chased the cat"
-- [ ] Test: "The man who the dog bit ran away"
-- [ ] Test ambiguous sentences with multiple valid parses
-- [ ] Verify all expected parses are returned
+### 2.4 Parser Testing ✓
+- [x] Write unit tests with non-Buffalo sentences
+- [x] Test: "The dog chased the cat"
+- [x] Test: "The man who the dog bit ran away"
+- [x] Test ambiguous sentences with multiple valid parses
+- [x] Verify all expected parses are returned
 
-### 2.5 Buffalo Dictionary
-- [ ] Create Buffalo-only lexicon
-- [ ] `Buffalo` → NP (proper noun, city)
-- [ ] `buffalo` → N (noun, animal)
-- [ ] `buffalo` → V (verb, to intimidate)
-- [ ] Test with known Buffalo sentence parses
+### 2.5 Buffalo Dictionary ✓
+- [x] Create Buffalo-only lexicon
+- [x] `Buffalo` → PN (proper noun, city)
+- [x] `buffalo` → N (noun, animal)
+- [x] `buffalo` → V (verb, to intimidate)
+- [x] Test with known Buffalo sentence parses (8-word sentence parses)
 
 ## Phase 3: Visualization
 
@@ -137,5 +137,5 @@
 
 ## Current Status
 
-**Phase**: Phase 1 Complete
-**Next Step**: Phase 2.1 - Lexicon System
+**Phase**: Phase 2 Complete
+**Next Step**: Phase 3.1 - Diagram Generator

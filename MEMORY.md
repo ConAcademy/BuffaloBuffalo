@@ -7,9 +7,11 @@ This file stores persistent concepts, decisions, and insights for the BuffaloBuf
 ### Buffalo Parts of Speech
 | Word | Part of Speech | Meaning |
 |------|---------------|---------|
-| Buffalo | Proper Noun (NP) | The city in New York |
+| Buffalo | Proper Noun (PN) | The city in New York |
 | buffalo | Noun (N) | The animal (bison) |
 | buffalo | Verb (V) | To intimidate, bully, or bewilder |
+
+**Note:** Proper noun uses `PN` (not `NP`) to avoid collision with `NP` non-terminal (Noun Phrase).
 
 ### Grammar Rules for Buffalo Sentences
 - Proper noun "Buffalo" acts as an adjective modifying "buffalo" (noun)
@@ -26,26 +28,35 @@ This file stores persistent concepts, decisions, and insights for the BuffaloBuf
 
 ## Technical Decisions
 
-### Parser Architecture
-- Chart parsing or CYK algorithm for handling ambiguous grammars
-- Dictionary-driven: grammar rules + lexicon
-- Must handle reduced relative clauses (omitted "that/which")
+### Parser Architecture (Implemented)
+- **Earley parser** chosen over CYK for flexibility with arbitrary CFG rules
+- Dictionary-driven: `Grammar` class + `Lexicon` class
+- Handles reduced relative clauses via `RC → NP VP` rule
+- Returns all valid parse trees (capped at 100 to prevent explosion)
+- Edge-based chart structure for tree reconstruction
 
-### Visualization Approach
+### Symbol Naming Convention
+- **Terminals (POS tags):** N, V, PN, DET, ADJ, ADV, PREP, CONJ, REL, AUX
+- **Non-terminals:** S, NP, VP, PP, ADJP, ADVP, RC
+- `isTerminal()` function distinguishes them
+
+### Visualization Approach (Planned)
 - Reed-Kellogg sentence diagrams (elementary school style)
 - Horizontal baseline for subject-verb-object
 - Diagonal lines for modifiers
 - Pedestals for relative clauses
 
-### Dictionary Structure
+### Type Structure (Implemented)
 ```typescript
+type PartOfSpeech = 'N' | 'V' | 'PN' | 'DET' | 'ADJ' | 'ADV' | 'PREP' | 'CONJ' | 'REL' | 'AUX';
+type NonTerminal = 'S' | 'NP' | 'VP' | 'PP' | 'ADJP' | 'ADVP' | 'RC';
+
 interface LexiconEntry {
   word: string;
   pos: PartOfSpeech;
-  features?: Record<string, string>;
+  lemma?: string;
+  features?: GrammaticalFeatures;
 }
-
-type PartOfSpeech = 'N' | 'V' | 'NP' | 'DET' | 'ADJ' | 'ADV' | 'PREP' | 'CONJ' | 'REL';
 ```
 
 ## Open Questions
