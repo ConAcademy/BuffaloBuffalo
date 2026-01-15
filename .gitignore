@@ -1,5 +1,8 @@
 # BuffaloBuffalo .gitignore
 
+# System files
+.DS_Store
+
 # Build artifacts
 node_modules/
 dist/

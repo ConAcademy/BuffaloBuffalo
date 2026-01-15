@@ -166,3 +166,39 @@ Changing gears to some DevOps.  I want to serve this on GitHub pages.  Since it 
 ## 2026-01-15T14:57:29Z
 
 please test the github action locally before i push.  and actually, please make a simple Taskfile.yml for build, test, run, and actions testing.
+
+---
+
+## 2026-01-15T15:07:47Z
+
+oh we need a logo.  make an SVG of a buffalo riding a bicycle.  put it on the page, along with a link to the readme
+
+---
+
+## 2026-01-15T15:10:36Z
+
+actually i want two buffalos riding a tandem bicycle
+
+---
+
+## 2026-01-15T15:20:23Z
+
+can you save the svg as a file in images/ and reference it from there?  also I added the image BuffaloBuffaloTandemBike.jpeg, which you can add to the right side of the BuffaloBuffalo headline at the appropriate size.
+
+---
+
+## 2026-01-15T15:21:48Z
+
+please add them both to the readme and also include a link to the repo readme in the top.
+
+---
+
+## 2026-01-15T15:23:37Z
+
+put the README link at the bottom right of the page.  The title and subtitle should be centered with eachother
+
+---
+
+## 2026-01-15T15:24:53Z
+
+Bottom left footer should be: "GitHub: README.md PROMPTS.md" with GitHub: in bold and the respective links for the md file

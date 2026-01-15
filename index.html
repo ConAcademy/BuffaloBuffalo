@@ -358,11 +358,67 @@
     .legend-color.golden {
       background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
     }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      width: 180px;
+      height: auto;
+    }
+
+    .hero-image {
+      width: 140px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .header-text {
+      text-align: center;
+    }
+
+    .header-text h1 {
+      margin: 0;
+    }
+
+    .header-text .subtitle {
+      margin: 5px 0 0 0;
+    }
+
+    .footer {
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid #ddd;
+      text-align: left;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .footer a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <h1>BuffaloBuffalo</h1>
-  <p class="subtitle">Construct and visualize Buffalo sentences</p>
+  <div class="header">
+    <img src="images/logo.svg" alt="Buffalo on a bicycle" class="logo">
+    <div class="header-text">
+      <h1>BuffaloBuffalo</h1>
+      <p class="subtitle">Construct and visualize Buffalo sentences</p>
+    </div>
+    <img src="images/BuffaloBuffaloTandemBike.jpeg" alt="Two buffalos on a tandem bike" class="hero-image">
+  </div>
 
   <div class="input-section">
     <div class="buffalo-buttons">
@@ -853,5 +909,11 @@
     renderSentence();
     updateWildcardButton();
   </script>
+
+  <div class="footer">
+    <strong>GitHub:</strong>
+    <a href="https://github.com/ConAcademy/BuffaloBuffalo/blob/main/README.md" target="_blank">README.md</a>
+    <a href="https://github.com/ConAcademy/BuffaloBuffalo/blob/main/PROMPTS.md" target="_blank">PROMPTS.md</a>
+  </div>
 </body>
 </html>

@@ -1,5 +1,12 @@
 # BuffaloBuffalo
 
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://conacademy.github.io/BuffaloBuffalo/)
+
+<p align="center">
+  <img src="images/logo.svg" alt="Buffalo Buffalo Logo" width="300">
+  <img src="images/BuffaloBuffaloTandemBike.jpeg" alt="Two buffalos on a tandem bike" width="280">
+</p>
+
 A web application for constructing, visualizing, and interpreting [Buffalo sentences](https://en.wikipedia.org/wiki/Buffalo_buffalo_Buffalo_buffalo_buffalo_buffalo_Buffalo_buffalo) — the classic linguistic example demonstrating how a single word can function as multiple parts of speech.
 
 ## What is a Buffalo Sentence?
@@ -81,6 +88,7 @@ BuffaloBuffalo/
 ├── package.json
 ├── tsconfig.json
 ├── vite.config.ts
+├── Taskfile.yml         # Task runner commands
 ├── src/
 │   ├── index.ts         # Main exports
 │   ├── types.ts         # Type definitions
@@ -91,6 +99,9 @@ BuffaloBuffalo/
 │   └── viz/
 │       ├── layout.ts    # Tree layout algorithms
 │       └── renderer.ts  # SVG rendering
+├── images/
+│   ├── logo.svg         # Tandem bicycle logo
+│   └── BuffaloBuffaloTandemBike.jpeg
 ├── README.md            # This file
 ├── AGENTS.md            # Agent documentation
 ├── MEMORY.md            # Technical decisions

@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 140">
+  <!-- Back wheel -->
+  <circle cx="45" cy="110" r="25" fill="none" stroke="#333" stroke-width="3"/>
+  <circle cx="45" cy="110" r="3" fill="#333"/>
+  <line x1="45" y1="85" x2="45" y2="135" stroke="#333" stroke-width="1.5"/>
+  <line x1="20" y1="110" x2="70" y2="110" stroke="#333" stroke-width="1.5"/>
+  <line x1="27" y1="92" x2="63" y2="128" stroke="#333" stroke-width="1.5"/>
+  <line x1="27" y1="128" x2="63" y2="92" stroke="#333" stroke-width="1.5"/>
+
+  <!-- Front wheel -->
+  <circle cx="255" cy="110" r="25" fill="none" stroke="#333" stroke-width="3"/>
+  <circle cx="255" cy="110" r="3" fill="#333"/>
+  <line x1="255" y1="85" x2="255" y2="135" stroke="#333" stroke-width="1.5"/>
+  <line x1="230" y1="110" x2="280" y2="110" stroke="#333" stroke-width="1.5"/>
+  <line x1="237" y1="92" x2="273" y2="128" stroke="#333" stroke-width="1.5"/>
+  <line x1="237" y1="128" x2="273" y2="92" stroke="#333" stroke-width="1.5"/>
+
+  <!-- Tandem frame - top tube -->
+  <line x1="70" y1="70" x2="230" y2="70" stroke="#e74c3c" stroke-width="4"/>
+  <!-- Down tube front -->
+  <line x1="230" y1="70" x2="255" y2="110" stroke="#e74c3c" stroke-width="4"/>
+  <!-- Seat tube front -->
+  <line x1="200" y1="70" x2="200" y2="110" stroke="#e74c3c" stroke-width="4"/>
+  <!-- Seat tube rear -->
+  <line x1="100" y1="70" x2="100" y2="110" stroke="#e74c3c" stroke-width="4"/>
+  <!-- Chain stays -->
+  <line x1="45" y1="110" x2="100" y2="110" stroke="#e74c3c" stroke-width="4"/>
+  <line x1="100" y1="110" x2="200" y2="110" stroke="#e74c3c" stroke-width="4"/>
+  <line x1="200" y1="110" x2="255" y2="110" stroke="#e74c3c" stroke-width="4"/>
+  <!-- Seat stays -->
+  <line x1="45" y1="110" x2="70" y2="70" stroke="#e74c3c" stroke-width="4"/>
+  <!-- Head tube -->
+  <line x1="230" y1="70" x2="230" y2="50" stroke="#e74c3c" stroke-width="4"/>
+
+  <!-- Handlebars -->
+  <line x1="230" y1="50" x2="250" y2="45" stroke="#333" stroke-width="3"/>
+  <line x1="245" y1="40" x2="255" y2="50" stroke="#333" stroke-width="3"/>
+
+  <!-- Rear seat -->
+  <ellipse cx="100" cy="68" rx="12" ry="4" fill="#8B4513"/>
+  <!-- Front seat -->
+  <ellipse cx="200" cy="68" rx="12" ry="4" fill="#8B4513"/>
+
+  <!-- Rear pedals -->
+  <circle cx="100" cy="110" r="6" fill="#333"/>
+  <line x1="94" y1="110" x2="86" y2="118" stroke="#333" stroke-width="2"/>
+  <rect x="82" y="116" width="8" height="4" fill="#333"/>
+
+  <!-- Front pedals -->
+  <circle cx="200" cy="110" r="6" fill="#333"/>
+  <line x1="206" y1="110" x2="214" y2="118" stroke="#333" stroke-width="2"/>
+  <rect x="210" y="116" width="8" height="4" fill="#333"/>
+
+  <!-- REAR BUFFALO (captain) -->
+  <!-- Body -->
+  <ellipse cx="100" cy="45" rx="28" ry="16" fill="#5D4037"/>
+  <!-- Hump -->
+  <ellipse cx="85" cy="34" rx="10" ry="8" fill="#5D4037"/>
+  <!-- Head -->
+  <ellipse cx="128" cy="42" rx="14" ry="11" fill="#5D4037"/>
+  <!-- Snout -->
+  <ellipse cx="140" cy="46" rx="7" ry="5" fill="#4E342E"/>
+  <!-- Nostrils -->
+  <circle cx="142" cy="45" r="1.2" fill="#333"/>
+  <circle cx="142" cy="48" r="1.2" fill="#333"/>
+  <!-- Eye -->
+  <circle cx="130" cy="40" r="2.5" fill="white"/>
+  <circle cx="131" cy="40" r="1.2" fill="#333"/>
+  <!-- Horns -->
+  <path d="M118 33 Q110 22 105 28" fill="none" stroke="#D7CCC8" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M121 31 Q127 20 136 26" fill="none" stroke="#D7CCC8" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Beard -->
+  <path d="M133 52 Q131 58 128 55 Q125 60 123 56" fill="#4E342E" stroke="#4E342E" stroke-width="1.5"/>
+  <!-- Ear -->
+  <ellipse cx="118" cy="35" rx="3" ry="5" fill="#5D4037"/>
+  <!-- Tail -->
+  <path d="M72 45 Q58 40 56 55" fill="none" stroke="#5D4037" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="56" cy="57" rx="2.5" ry="4" fill="#4E342E"/>
+  <!-- Leg on pedal -->
+  <path d="M90 58 Q88 85 86 115" fill="none" stroke="#5D4037" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="86" cy="117" rx="4" ry="2.5" fill="#4E342E"/>
+  <!-- Other leg -->
+  <path d="M78 55 Q72 75 68 90" fill="none" stroke="#5D4037" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="67" cy="92" rx="3.5" ry="2.5" fill="#4E342E"/>
+
+  <!-- FRONT BUFFALO (stoker) -->
+  <!-- Body -->
+  <ellipse cx="200" cy="45" rx="28" ry="16" fill="#6D4C41"/>
+  <!-- Hump -->
+  <ellipse cx="185" cy="34" rx="10" ry="8" fill="#6D4C41"/>
+  <!-- Head -->
+  <ellipse cx="228" cy="42" rx="14" ry="11" fill="#6D4C41"/>
+  <!-- Snout -->
+  <ellipse cx="240" cy="46" rx="7" ry="5" fill="#5D4037"/>
+  <!-- Nostrils -->
+  <circle cx="242" cy="45" r="1.2" fill="#333"/>
+  <circle cx="242" cy="48" r="1.2" fill="#333"/>
+  <!-- Eye -->
+  <circle cx="230" cy="40" r="2.5" fill="white"/>
+  <circle cx="231" cy="40" r="1.2" fill="#333"/>
+  <!-- Horns -->
+  <path d="M218 33 Q210 22 205 28" fill="none" stroke="#D7CCC8" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M221 31 Q227 20 236 26" fill="none" stroke="#D7CCC8" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Beard -->
+  <path d="M233 52 Q231 58 228 55 Q225 60 223 56" fill="#5D4037" stroke="#5D4037" stroke-width="1.5"/>
+  <!-- Ear -->
+  <ellipse cx="218" cy="35" rx="3" ry="5" fill="#6D4C41"/>
+  <!-- Leg on pedal -->
+  <path d="M210 58 Q212 85 214 115" fill="none" stroke="#6D4C41" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="214" cy="117" rx="4" ry="2.5" fill="#5D4037"/>
+  <!-- Other leg -->
+  <path d="M178 55 Q172 75 168 90" fill="none" stroke="#6D4C41" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="167" cy="92" rx="3.5" ry="2.5" fill="#5D4037"/>
+  <!-- Arm on handlebar -->
+  <path d="M235 50 Q242 48 250 45" fill="none" stroke="#6D4C41" stroke-width="4" stroke-linecap="round"/>
+  <ellipse cx="251" cy="45" rx="3.5" ry="2.5" fill="#5D4037"/>
+</svg>
