@@ -1,0 +1,22 @@
+{
+  "name": "buffalobuffalo",
+  "version": "1.0.0",
+  "description": "A web application for constructing, visualizing, and interpreting Buffalo sentences",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": ["linguistics", "parser", "buffalo", "nlp"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.17"
+  }
+}

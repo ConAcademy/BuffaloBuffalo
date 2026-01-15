@@ -1,0 +1,5 @@
+# BuffaloBuffalo .gitignore
+
+# Build artifacts
+node_modules/
+

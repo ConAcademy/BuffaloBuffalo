@@ -1,18 +1,20 @@
 # PLAN.md - Implementation Plan
 
-## Phase 1: Foundation
+## Phase 1: Foundation ✓
 
-### 1.1 Project Setup
-- [ ] Initialize TypeScript project with strict mode
-- [ ] Configure build tooling (esbuild or vite for simplicity)
-- [ ] Set up test framework (vitest)
-- [ ] Create folder structure: `src/parser`, `src/viz`, `src/web`, `src/llm`
+### 1.1 Project Setup ✓
+- [x] Initialize TypeScript project with strict mode
+- [x] Configure build tooling (Vite)
+- [x] Set up test framework (Vitest)
+- [x] Create folder structure: `src/parser`, `src/viz`, `src/web`, `src/llm`
 
-### 1.2 Type Definitions
-- [ ] Define `PartOfSpeech` enum
-- [ ] Define `LexiconEntry` interface
-- [ ] Define `ParseTree` and `ParseNode` types
-- [ ] Define `GrammarRule` type for CFG rules
+### 1.2 Type Definitions ✓
+- [x] Define `PartOfSpeech` type (union type)
+- [x] Define `LexiconEntry` interface
+- [x] Define `ParseTree` and `ParseNode` types
+- [x] Define `GrammarRule` type for CFG rules
+- [x] Define `NonTerminal` and `GrammarSymbol` types
+- [x] Define `GrammaticalFeatures` for agreement
 
 ## Phase 2: Parse Tree Generator
 
@@ -135,5 +137,5 @@
 
 ## Current Status
 
-**Phase**: Not started
-**Next Step**: Phase 1.1 - Project Setup
+**Phase**: Phase 1 Complete
+**Next Step**: Phase 2.1 - Lexicon System
