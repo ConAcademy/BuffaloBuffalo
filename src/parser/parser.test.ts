@@ -144,6 +144,18 @@ describe('Buffalo sentence parsing', () => {
     // Should have at least one parse, possibly multiple
     expect(result.trees.length).toBeGreaterThan(0);
   });
+
+  it('should deduplicate identical parse trees', () => {
+    // Since all words are "buffalo", many derivation paths produce identical trees
+    const result = parser.parse(['buffalo', 'buffalo', 'buffalo']);
+
+    // Serialize each tree and check for uniqueness
+    const serialized = result.trees.map(t => serializeTree(t.root));
+    const unique = new Set(serialized);
+
+    // All trees should be unique (no duplicates)
+    expect(serialized.length).toBe(unique.size);
+  });
 });
 
 // Helper to collect all terminal nodes from a parse tree
@@ -152,4 +164,13 @@ function collectTerminals(node: ParseNode): ParseNode[] {
     return node.word ? [node] : [];
   }
   return node.children.flatMap(collectTerminals);
+}
+
+// Helper to serialize a parse tree for comparison
+function serializeTree(node: ParseNode): string {
+  if (node.children.length === 0) {
+    return `(${node.symbol} "${node.word ?? ''}")`;
+  }
+  const children = node.children.map(c => serializeTree(c)).join(' ');
+  return `(${node.symbol} ${children})`;
 }

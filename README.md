@@ -11,28 +11,78 @@ A web application for constructing, visualizing, and interpreting [Buffalo sente
 
 The famous sentence means: "Bison from Buffalo, NY, that bison from Buffalo, NY intimidate, themselves intimidate bison from Buffalo, NY."
 
+## Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Run the app
+npm run dev
+```
+
+Then open http://localhost:5173 in your browser.
+
+## Usage
+
+1. Click the colored buttons to build a sentence:
+   - **Purple** = Buffalo (the city)
+   - **Green** = buffalo (the animal)
+   - **Red** = buffalo (the verb)
+
+2. Click **Parse!** to see the parse tree
+
+3. Use **← Previous / Next →** to browse multiple valid parses
+
+4. Toggle between **Tree** and **Reed-Kellogg** diagram styles
+
+## Scripts
+
+```bash
+npm run dev        # Start development server
+npm run build      # Build for production
+npm run preview    # Preview production build
+npm run test       # Run tests in watch mode
+npm run test:run   # Run tests once
+npm run typecheck  # Check TypeScript types
+```
+
 ## Features
 
-- **Sentence Builder**: Construct Buffalo sentences by selecting words with specific parts of speech, or use wildcards for automatic parsing
-- **Parse Tree Generator**: A generic English parser that generates valid parse trees given a dictionary
-- **Visualization**: View sentence structure using elementary school-style sentence diagrams
-- **LLM Interpretation**: Submit sentences for AI-powered interpretation based on the parsed structure
+- **Sentence Builder**: Construct Buffalo sentences by clicking POS buttons
+- **Earley Parser**: Handles ambiguous grammars, returns all valid parses
+- **Visualization**: SVG-based tree diagrams with two layout styles
+- **Zero Dependencies**: Pure TypeScript, no runtime frameworks
 
 ## Tech Stack
 
-- TypeScript
-- Lightweight web framework (TBD)
-- LLM integration for sentence interpretation
+- TypeScript (strict mode)
+- Vite (build tooling)
+- Vitest (testing)
+- Vanilla JS (no UI framework)
 
 ## Project Structure
 
 ```
 BuffaloBuffalo/
-├── README.md      # This file - human documentation
-├── AGENTS.md      # Agent-focused documentation
-├── MEMORY.md      # Long-term working concepts
-├── PLAN.md        # Implementation plan
-└── PROMPTS.md     # Auto-generated (read-only)
+├── index.html           # Web app entry point
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+├── src/
+│   ├── index.ts         # Main exports
+│   ├── types.ts         # Type definitions
+│   ├── parser/
+│   │   ├── lexicon.ts   # Word dictionary
+│   │   ├── grammar.ts   # CFG rules
+│   │   └── earley.ts    # Earley parser
+│   └── viz/
+│       ├── layout.ts    # Tree layout algorithms
+│       └── renderer.ts  # SVG rendering
+├── README.md            # This file
+├── AGENTS.md            # Agent documentation
+├── MEMORY.md            # Technical decisions
+└── PLAN.md              # Implementation plan
 ```
 
 ## Inspiration

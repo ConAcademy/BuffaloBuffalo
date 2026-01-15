@@ -53,17 +53,28 @@
       transition: transform 0.1s;
     }
 
-    .buffalo-btn:hover {
+    .buffalo-btn:hover:not(:disabled) {
       transform: scale(1.05);
     }
 
-    .buffalo-btn:active {
+    .buffalo-btn:active:not(:disabled) {
       transform: scale(0.95);
+    }
+
+    .buffalo-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .btn-pn { background: #9b59b6; color: white; }
     .btn-n { background: #2ecc71; color: white; }
     .btn-v { background: #e74c3c; color: white; }
+    .btn-wild {
+      background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+      color: #333;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(241, 196, 15, 0.4);
+    }
     .btn-clear { background: #95a5a6; color: white; }
     .btn-parse { background: #3498db; color: white; font-weight: bold; }
 
@@ -82,12 +93,52 @@
       margin: 0 5px;
       padding: 5px 10px;
       border-radius: 4px;
-      cursor: pointer;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.1s, opacity 0.1s;
+    }
+
+    .word:active {
+      cursor: grabbing;
+    }
+
+    .word.dragging {
+      opacity: 0.5;
+      transform: scale(1.05);
+    }
+
+    .word.drag-over {
+      transform: translateX(10px);
+    }
+
+    .word.drag-over-left {
+      transform: translateX(-10px);
     }
 
     .word-pn { background: #9b59b6; color: white; }
     .word-n { background: #2ecc71; color: white; }
     .word-v { background: #e74c3c; color: white; }
+    .word-wild {
+      background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+      color: #333;
+      font-weight: bold;
+    }
+
+    .drop-indicator {
+      display: inline-block;
+      width: 3px;
+      height: 30px;
+      background: #3498db;
+      margin: 0 2px;
+      vertical-align: middle;
+      border-radius: 2px;
+      animation: pulse 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.5; }
+      to { opacity: 1; }
+    }
 
     .presets {
       margin-top: 15px;
@@ -179,6 +230,7 @@
       display: flex;
       gap: 20px;
       justify-content: center;
+      flex-wrap: wrap;
       margin-top: 20px;
       padding-top: 15px;
       border-top: 1px solid #eee;
@@ -195,6 +247,10 @@
       height: 20px;
       border-radius: 4px;
     }
+
+    .legend-color.golden {
+      background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+    }
   </style>
 </head>
 <body>
@@ -203,9 +259,10 @@
 
   <div class="input-section">
     <div class="buffalo-buttons">
-      <button class="buffalo-btn btn-pn" onclick="addWord('PN')">Buffalo (city)</button>
-      <button class="buffalo-btn btn-n" onclick="addWord('N')">buffalo (animal)</button>
-      <button class="buffalo-btn btn-v" onclick="addWord('V')">buffalo (verb)</button>
+      <button class="buffalo-btn btn-pn" onclick="addWord('PN')">Adjective</button>
+      <button class="buffalo-btn btn-n" onclick="addWord('N')">Noun</button>
+      <button class="buffalo-btn btn-v" onclick="addWord('V')">Verb</button>
+      <button class="buffalo-btn btn-wild" id="wild-btn" onclick="addWord('WILD')">Golden Buffalo ✨</button>
       <button class="buffalo-btn btn-clear" onclick="clearSentence()">Clear</button>
       <button class="buffalo-btn btn-parse" onclick="parseSentence()">Parse!</button>
     </div>
@@ -242,12 +299,20 @@
 
     <div class="legend">
       <div class="legend-item">
-        <div class="legend-color" style="background: #4a90d9;"></div>
-        <span>Phrase</span>
+        <div class="legend-color" style="background: #9b59b6;"></div>
+        <span>Adjective (Buffalo)</span>
       </div>
       <div class="legend-item">
         <div class="legend-color" style="background: #2ecc71;"></div>
-        <span>Word (POS)</span>
+        <span>Noun (buffalo)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #e74c3c;"></div>
+        <span>Verb (buffalo)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color golden"></div>
+        <span>Wildcard (any)</span>
       </div>
     </div>
   </div>
@@ -263,26 +328,36 @@
     window.parseTrees = [];
     window.currentParse = 0;
 
+    function hasWildcard() {
+      return words.some(w => w.pos === 'WILD');
+    }
+
+    function updateWildcardButton() {
+      const btn = document.getElementById('wild-btn');
+      btn.disabled = hasWildcard();
+      btn.title = hasWildcard() ? 'Only one Golden Buffalo allowed per sentence' : 'Add wildcard (matches any POS)';
+    }
+
     window.addWord = function(pos) {
+      if (pos === 'WILD' && hasWildcard()) return;
       words.push({ word: 'buffalo', pos });
       renderSentence();
+      updateWildcardButton();
     };
 
     window.clearSentence = function() {
       words = [];
       renderSentence();
+      updateWildcardButton();
       document.getElementById('results').style.display = 'none';
     };
 
     window.loadPreset = function(count) {
-      // Famous 8-word interpretation:
-      // [Buffalo buffalo] [Buffalo buffalo buffalo] [buffalo] [Buffalo buffalo]
-      // Subject: Buffalo bison (that) Buffalo bison bully, bully Buffalo bison
       const presets = {
         3: [
-          { word: 'buffalo', pos: 'PN' },  // Buffalo
-          { word: 'buffalo', pos: 'N' },   // buffalo (bison)
-          { word: 'buffalo', pos: 'V' },   // buffalo (intimidate)
+          { word: 'buffalo', pos: 'PN' },
+          { word: 'buffalo', pos: 'N' },
+          { word: 'buffalo', pos: 'V' },
         ],
         4: [
           { word: 'buffalo', pos: 'PN' },
@@ -310,34 +385,138 @@
       };
       words = presets[count] || [];
       renderSentence();
+      updateWildcardButton();
     };
+
+    let draggedIndex = null;
 
     function renderSentence() {
       const container = document.getElementById('sentence');
       if (words.length === 0) {
-        container.innerHTML = '<span style="color: #999;">Click buttons above to build a sentence...</span>';
+        container.innerHTML = '<span style="color: #999;">Click buttons to add words, drag to reorder...</span>';
         return;
       }
 
       container.innerHTML = words.map((w, i) => {
-        const label = w.pos === 'PN' ? 'Buffalo' : 'buffalo';
-        const cls = w.pos === 'PN' ? 'word-pn' : w.pos === 'N' ? 'word-n' : 'word-v';
-        return `<span class="word ${cls}" onclick="removeWord(${i})" title="Click to remove">${label}</span>`;
+        let label, cls;
+        if (w.pos === 'WILD') {
+          label = 'Buffalo? ✨';
+          cls = 'word-wild';
+        } else {
+          label = w.pos === 'PN' ? 'Buffalo' : 'buffalo';
+          cls = w.pos === 'PN' ? 'word-pn' : w.pos === 'N' ? 'word-n' : 'word-v';
+        }
+        return `<span class="word ${cls}"
+                      draggable="true"
+                      data-index="${i}"
+                      title="Drag to reorder, double-click to remove">${label}</span>`;
       }).join('');
+
+      // Add drag event listeners
+      container.querySelectorAll('.word').forEach(el => {
+        el.addEventListener('dragstart', handleDragStart);
+        el.addEventListener('dragend', handleDragEnd);
+        el.addEventListener('dragover', handleDragOver);
+        el.addEventListener('dragenter', handleDragEnter);
+        el.addEventListener('dragleave', handleDragLeave);
+        el.addEventListener('drop', handleDrop);
+        el.addEventListener('dblclick', handleDoubleClick);
+      });
+    }
+
+    function handleDragStart(e) {
+      draggedIndex = parseInt(e.target.dataset.index);
+      e.target.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', draggedIndex);
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+      document.querySelectorAll('.word').forEach(el => {
+        el.classList.remove('drag-over', 'drag-over-left');
+      });
+      draggedIndex = null;
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    }
+
+    function handleDragEnter(e) {
+      e.preventDefault();
+      const targetIndex = parseInt(e.target.dataset.index);
+      if (targetIndex !== draggedIndex) {
+        e.target.classList.add(targetIndex > draggedIndex ? 'drag-over' : 'drag-over-left');
+      }
+    }
+
+    function handleDragLeave(e) {
+      e.target.classList.remove('drag-over', 'drag-over-left');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      const targetIndex = parseInt(e.target.dataset.index);
+
+      if (draggedIndex !== null && targetIndex !== draggedIndex) {
+        // Remove from old position and insert at new position
+        const [moved] = words.splice(draggedIndex, 1);
+        words.splice(targetIndex, 0, moved);
+        renderSentence();
+        updateWildcardButton();
+      }
+    }
+
+    function handleDoubleClick(e) {
+      const index = parseInt(e.target.dataset.index);
+      removeWord(index);
     }
 
     window.removeWord = function(index) {
       words.splice(index, 1);
       renderSentence();
+      updateWildcardButton();
     };
 
     window.parseSentence = function() {
       if (words.length === 0) return;
 
-      const sentence = words.map(w => w.pos === 'PN' ? 'Buffalo' : 'buffalo');
-      const result = parser.parse(sentence);
+      // Expand wildcards into all possible POS combinations
+      const allTrees = [];
+      const posOptions = ['PN', 'N', 'V'];
 
-      parseTrees = result.trees;
+      function expandWildcards(wordList, index, current) {
+        if (index >= wordList.length) {
+          // Parse this combination
+          const sentence = current.map(w => w.pos === 'PN' ? 'Buffalo' : 'buffalo');
+          const result = parser.parse(sentence);
+          allTrees.push(...result.trees);
+          return;
+        }
+
+        if (wordList[index].pos === 'WILD') {
+          // Try all POS options for wildcard
+          for (const pos of posOptions) {
+            expandWildcards(wordList, index + 1, [...current, { word: 'buffalo', pos }]);
+          }
+        } else {
+          expandWildcards(wordList, index + 1, [...current, wordList[index]]);
+        }
+      }
+
+      expandWildcards(words, 0, []);
+
+      // Deduplicate trees (parser already dedupes, but wildcard expansion may create more dupes)
+      const seen = new Set();
+      parseTrees = allTrees.filter(tree => {
+        const key = serializeTree(tree.root);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
       currentParse = 0;
 
       const resultsEl = document.getElementById('results');
@@ -353,6 +532,14 @@
         showParse(0);
       }
     };
+
+    function serializeTree(node) {
+      if (node.children.length === 0) {
+        return `(${node.symbol} "${node.word ?? ''}")`;
+      }
+      const children = node.children.map(c => serializeTree(c)).join(' ');
+      return `(${node.symbol} ${children})`;
+    }
 
     window.showParse = function(index) {
       if (index < 0 || index >= parseTrees.length) return;
@@ -373,6 +560,7 @@
 
     // Initialize
     renderSentence();
+    updateWildcardButton();
   </script>
 </body>
 </html>

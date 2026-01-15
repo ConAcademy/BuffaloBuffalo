@@ -95,13 +95,14 @@ export class EarleyParser {
       }
     }
 
-    // Extract trees
+    // Extract trees and deduplicate
     const trees = this.extractTrees(chart, edges, input);
+    const uniqueTrees = this.deduplicateTrees(trees);
 
     return {
       input,
-      trees: trees.slice(0, this.maxTrees),
-      errors: trees.length === 0 ? ['No valid parse found'] : undefined,
+      trees: uniqueTrees.slice(0, this.maxTrees),
+      errors: uniqueTrees.length === 0 ? ['No valid parse found'] : undefined,
     };
   }
 
@@ -192,6 +193,39 @@ export class EarleyParser {
     }
 
     return trees;
+  }
+
+  /**
+   * Remove duplicate parse trees (same structure).
+   * Since all words are "buffalo", many derivations produce identical trees.
+   */
+  private deduplicateTrees(trees: ParseTree[]): ParseTree[] {
+    const seen = new Set<string>();
+    const unique: ParseTree[] = [];
+
+    for (const tree of trees) {
+      const key = this.serializeTree(tree.root);
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(tree);
+      }
+    }
+
+    return unique;
+  }
+
+  /**
+   * Serialize a parse tree to a string for comparison.
+   * Captures structure and POS tags, ignoring derivation path.
+   */
+  private serializeTree(node: ParseNode): string {
+    if (node.children.length === 0) {
+      // Terminal: include symbol and word
+      return `(${node.symbol} "${node.word ?? ''}")`;
+    }
+    // Non-terminal: include symbol and serialized children
+    const children = node.children.map(c => this.serializeTree(c)).join(' ');
+    return `(${node.symbol} ${children})`;
   }
 
   private buildNodes(
